@@ -1,0 +1,36 @@
+# app/models/profile.py
+
+from sqlalchemy import Column, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
+
+from app.db.base_class import Base
+
+
+class Profile(Base):
+    __tablename__ = "profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        unique=True,
+        nullable=False,
+    )
+
+    first_name = Column(String(100), nullable=True)
+    last_name = Column(String(100), nullable=True)
+
+    phone = Column(String(30), nullable=True)
+
+    profile_image = Column(String(500), nullable=True)
+
+    bio = Column(Text, nullable=True)
+
+    address = Column(String(255), nullable=True)
+
+    # Relationship
+    user = relationship(
+        "User",
+        back_populates="profile",
+    )
