@@ -1,5 +1,3 @@
-# app/models/user.py
-
 from sqlalchemy import (
     Boolean,
     Column,
@@ -19,11 +17,33 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    email = Column(String(255), unique=True, nullable=False, index=True)
+    first_name = Column(
+        String(100),
+        nullable=False,
+    )
 
-    hashed_password = Column(String(255), nullable=False)
+    last_name = Column(
+        String(100),
+        nullable=False,
+    )
 
-    is_active = Column(Boolean, default=True, nullable=False)
+    email = Column(
+        String(255),
+        unique=True,
+        nullable=False,
+        index=True,
+    )
+
+    hashed_password = Column(
+        String(255),
+        nullable=False,
+    )
+
+    is_active = Column(
+        Boolean,
+        default=True,
+        nullable=False,
+    )
 
     role_id = Column(
         Integer,

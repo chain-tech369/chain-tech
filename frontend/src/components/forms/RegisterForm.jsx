@@ -1,15 +1,24 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import Form from "../uis/Form";
 import Input from "../uis/Input";
 import Button from "../uis/Button";
 
+import { registerAction } from "../../actions/authActions";
+
 export default function RegisterForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loading, error } = useSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
-    name: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
-    confirmPassword: "",
     terms: false,
   });
 
@@ -22,23 +31,55 @@ export default function RegisterForm() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log("Registration data:", formData);
+    // Check terms
+    if (!formData.terms) {
+      alert("You must agree to the Terms of Service.");
+      return;
+    }
+
+    try {
+      // Data sent to the backend
+      const userData = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        password: formData.password,
+      };
+
+      await dispatch(registerAction(userData));
+
+      // Registration successful
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
   };
 
   return (
     <Form onSubmit={handleSubmit} className="space-y-5">
 
-      {/* Full Name */}
+      {/* First Name */}
       <Input
-        label="Full Name"
-        name="name"
+        label="First Name"
+        name="first_name"
         type="text"
-        value={formData.name}
+        value={formData.first_name}
         onChange={handleChange}
-        placeholder="John Doe"
+        placeholder="John"
+        required
+      />
+
+      {/* Last Name */}
+      <Input
+        label="Last Name"
+        name="last_name"
+        type="text"
+        value={formData.last_name}
+        onChange={handleChange}
+        placeholder="Doe"
         required
       />
 
@@ -64,20 +105,15 @@ export default function RegisterForm() {
         required
       />
 
-      {/* Confirm Password */}
-      <Input
-        label="Confirm Password"
-        name="confirmPassword"
-        type="password"
-        value={formData.confirmPassword}
-        onChange={handleChange}
-        placeholder="Confirm your password"
-        required
-      />
+      {/* Backend Error */}
+      {error && (
+        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
 
       {/* Terms */}
       <label className="flex items-start gap-3 text-sm text-slate-600">
-
         <input
           type="checkbox"
           name="terms"
@@ -104,15 +140,15 @@ export default function RegisterForm() {
           </a>
           .
         </span>
-
       </label>
 
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full rounded-xl bg-blue-950 py-3 hover:bg-blue-900"
+        disabled={loading}
+        className="w-full rounded-xl bg-blue-950 py-3 hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Create Account
+        {loading ? "Creating Account..." : "Create Account"}
       </Button>
 
     </Form>

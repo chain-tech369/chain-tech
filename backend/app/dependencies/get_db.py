@@ -1,9 +1,11 @@
-from sqlalchemy.orm import Session
 from collections.abc import Generator
-from app.core.sessions import SessionLocal
 
-def get_db() ->
-Generator[Session, None, None]:
+from sqlalchemy.orm import Session
+
+from app.db.sessions import SessionLocal
+
+
+def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
 
     try:

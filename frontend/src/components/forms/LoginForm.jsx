@@ -1,10 +1,19 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import Form from "../uis/Form";
 import Input from "../uis/Input";
 import Button from "../uis/Button";
 
+import { loginAction } from "../../actions/authActions";
+
 export default function LoginForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loading, error } = useSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,14 +29,26 @@ export default function LoginForm() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log("Login data:", formData);
+    try {
+      const credentials = {
+        email: formData.email,
+        password: formData.password,
+      };
+
+      await dispatch(loginAction(credentials));
+
+      // Login successful
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className="space-y-5">
 
       {/* Email */}
       <Input
@@ -43,9 +64,7 @@ export default function LoginForm() {
 
       {/* Password */}
       <div>
-
         <div className="mb-2 flex items-center justify-between">
-
           <label
             htmlFor="password"
             className="text-sm font-semibold text-slate-700"
@@ -59,7 +78,6 @@ export default function LoginForm() {
           >
             Forgot password?
           </a>
-
         </div>
 
         <Input
@@ -72,12 +90,17 @@ export default function LoginForm() {
           onChange={handleChange}
           required
         />
-
       </div>
+
+      {/* Backend Error */}
+      {error && (
+        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
 
       {/* Remember me */}
       <label className="flex items-center gap-2 text-sm text-slate-600">
-
         <input
           type="checkbox"
           name="remember"
@@ -87,12 +110,15 @@ export default function LoginForm() {
         />
 
         Remember me
-
       </label>
 
       {/* Submit */}
-      <Button type="submit">
-        Login
+      <Button
+        type="submit"
+        disabled={loading}
+        className="disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {loading ? "Logging in..." : "Login"}
       </Button>
 
     </Form>

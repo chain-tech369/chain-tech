@@ -69,15 +69,27 @@ export default function Navbar() {
         </nav>
 
         {/* =========================
-            DESKTOP LOGIN
+            DESKTOP LOGIN AND SIGN UP
         ========================== */}
-        <div className="justify-self-end">
+        <div className="justify-self-end gap-4 flex">
+
+           <NavLink
+            to="/register"
+            className={({ isActive }) =>
+              isActive
+                ? "rounded-lg bg-blue-500 px-4 py-2 text-xl text-white transition hover:bg-blue-400"
+                : "rounded-lg bg-gray-300 px-4 py-2 text-xl text-blue-600 transition hover:bg-blue-400"
+            }
+          >
+            Sign up
+          </NavLink>
+
           <NavLink
             to="/login"
             className={({ isActive }) =>
               isActive
-                ? "rounded-lg bg-blue-500 px-6 py-3 text-2xl font-bold text-white transition hover:bg-blue-400"
-                : "rounded-lg bg-yellow-400 px-6 py-3 text-2xl font-bold text-blue-950 transition hover:bg-yellow-300"
+                ? "rounded-lg bg-blue-500 px-4 py-2 text-xl text-white transition hover:bg-blue-400"
+                : "rounded-lg bg-gray-300 px-4 py-2 text-xl text-blue-600 transition hover:bg-blue-400"
             }
           >
             Login
@@ -134,8 +146,8 @@ export default function Navbar() {
           onClick={() => setMenuOpen(false)}
           className={({ isActive }) =>
             isActive
-              ? "rounded-lg bg-blue-500 px-5 py-2 font-bold text-white transition hover:bg-blue-400"
-              : "rounded-lg bg-yellow-400 px-5 py-2 font-bold text-blue-950 transition hover:bg-yellow-300"
+              ? "rounded-lg bg-blue-500 px-4 py-2  text-white transition hover:bg-blue-400"
+              : "rounded-full bg-white px-4 py-2 text-blue-600 transition hover:bg-blue-400"
           }
         >
           Login
