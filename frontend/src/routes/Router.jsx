@@ -5,6 +5,12 @@ import ProtectedLayout from "../layouts/ProtectedLayout";
 import ProfileLayout from "../layouts/ProfileLayout";
 
 // =====================================
+// LOADERS
+// =====================================
+import { currentUserLoader } from "../loaders/userLoader";
+import { profileLoader } from "../loaders/profileLoader";
+
+// =====================================
 // PUBLIC PAGES
 // =====================================
 import {
@@ -43,6 +49,8 @@ import {
   EditAccountPage,
   EditProfilePage,
   SettingsPage,
+  UserDetailPage,
+  ProfileDetailPage,
 } from "../pages/ProfilePages";
 
 // =====================================
@@ -59,22 +67,27 @@ export const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
       },
+
       {
         path: "/about",
         element: <AboutPage />,
       },
+
       {
         path: "/contact",
         element: <ContactPage />,
       },
+
       {
         path: "/services",
         element: <ServicePage />,
       },
+
       {
         path: "/login",
         element: <LoginPage />,
       },
+
       {
         path: "/register",
         element: <RegisterPage />,
@@ -88,22 +101,41 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedLayout />,
     children: [
+      // =====================================
+      // DASHBOARD
+      // =====================================
       {
         path: "/dashboard",
         element: <DashboardPage />,
       },
+
+      // =====================================
+      // PROTECTED HOME
+      // =====================================
       {
         path: "/home",
         element: <ProtectedHomePage />,
       },
+
+      // =====================================
+      // JOIN US
+      // =====================================
       {
         path: "/join-us",
         element: <JoinUsPage />,
       },
+
+      // =====================================
+      // SERVICE REQUEST
+      // =====================================
       {
         path: "/service-request",
         element: <ServiceRequestPage />,
       },
+
+      // =====================================
+      // PROTECTED SERVICES
+      // =====================================
       {
         path: "/service",
         element: <ProtectedServicePage />,
@@ -123,28 +155,57 @@ export const router = createBrowserRouter([
       {
         element: <ProfileLayout />,
         children: [
-          // Account Dashboard
+          // =====================================
+          // ACCOUNT DASHBOARD
+          // =====================================
           {
             path: "/account-dashboard",
             element: <AccountDashboardPage />,
+            loader: currentUserLoader,
           },
 
-          // Edit Account
+          // =====================================
+          // EDIT ACCOUNT
+          // =====================================
           {
             path: "/account/edit",
             element: <EditAccountPage />,
           },
 
-          // Edit Profile
+          // =====================================
+          // EDIT PROFILE
+          // =====================================
           {
             path: "/profile/edit",
             element: <EditProfilePage />,
           },
 
-          // Settings
+          // =====================================
+          // SETTINGS
+          // =====================================
           {
             path: "/settings",
             element: <SettingsPage />,
+            
+          },
+
+          // =====================================
+          // CURRENT USER DETAIL
+          // GET /users/me
+          // =====================================
+          {
+            path: "/user-detail",
+            element: <UserDetailPage />,
+            loader: currentUserLoader,
+          },
+
+          // =====================================
+          // PROFILE DETAIL
+          // =====================================
+          {
+            path: "/profile-detail",
+            element: <ProfileDetailPage />,
+            loader: profileLoader,
           },
         ],
       },

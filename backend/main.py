@@ -20,12 +20,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        # Local frontend
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-
-        # Cloudflare frontend
-        "https://donors-scholars-isolated-earnings.trycloudflare.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -37,15 +33,8 @@ app.add_middleware(
 # ROUTES
 # ========================================
 
-# Authentication routes
 app.include_router(auth_router)
-
-
-# User routes
 app.include_router(user_router)
-
-
-# Profile routes
 app.include_router(profile_router)
 
 

@@ -152,19 +152,6 @@ export default function ProtectedNavbar() {
                     Account Dashboard
                   </NavLink>
 
-                  <NavLink
-                    to="/profile"
-                    onClick={() => setProfileOpen(false)}
-                    className={({ isActive }) =>
-                      `block rounded-lg px-4 py-3 text-sm font-medium transition ${
-                        isActive
-                          ? "bg-blue-800 text-yellow-400"
-                          : "text-slate-200 hover:bg-blue-900"
-                      }`
-                    }
-                  >
-                    Profile
-                  </NavLink>
 
                   <NavLink
                     to="/account/edit"

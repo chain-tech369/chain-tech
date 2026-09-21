@@ -6,7 +6,7 @@ export default function ProfileLayout() {
 
   const navItems = [
     {
-      name: "Account Dashboard",
+      name: "account dashboard",
       path: "/account-dashboard",
       icon: "▦",
     },
