@@ -1,15 +1,14 @@
-import {Outlet} from 'react-router-dom'
-import Navbar from '../components/fix-layouts/Navbar'
-import Footer from '../components/fix-layouts/Footer'
+import { Outlet } from "react-router-dom";
+import PublicNavbar from "../components/fix-layouts/PublicNavbar";
 
 export default function PublicLayout() {
   return (
-    <div>
-      <Navbar />
+    <>
+      <PublicNavbar />
+
       <main>
         <Outlet />
       </main>
-      <Footer />
-    </div>
-  )
+    </>
+  );
 }

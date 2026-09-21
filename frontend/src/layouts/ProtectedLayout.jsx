@@ -1,22 +1,32 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import ProtectedNavbar from "../components/fix-layouts/ProtectedNavbar";
 import Sidebar from "../components/fix-layouts/Sidebar";
 
 export default function ProtectedLayout() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
 
+  // Not authenticated → go to login
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
+  // Authenticated → show protected application
   return (
-    <div className="flex min-h-screen bg-slate-100">
-      <Sidebar />
+    <div className="min-h-screen bg-slate-950">
+      {/* Protected Navbar */}
+      <ProtectedNavbar />
 
-      <main className="flex-1 p-6">
-        <Outlet />
-      </main>
-    </div>
+      
+
+        {/* Protected Page Content */}
+        <main className="flex-1">
+          <Outlet />
+        </main>
+      </div>
+    
   );
 }
