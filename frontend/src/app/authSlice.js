@@ -1,14 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null,
-
   accessToken: localStorage.getItem("access_token"),
-
   loading: false,
-
   error: null,
-
   isAuthenticated: !!localStorage.getItem("access_token"),
 };
 
@@ -27,11 +22,9 @@ const authSlice = createSlice({
       state.error = null;
     },
 
-    registerSuccess: (state, action) => {
+    registerSuccess: (state) => {
       state.loading = false;
       state.error = null;
-
-      state.user = action.payload.user || null;
     },
 
     registerFailure: (state, action) => {
@@ -52,11 +45,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
 
-      state.user = action.payload.user || null;
-
       if (action.payload.access_token) {
         state.accessToken = action.payload.access_token;
-
         state.isAuthenticated = true;
 
         localStorage.setItem(
@@ -69,37 +59,7 @@ const authSlice = createSlice({
     loginFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
-
       state.isAuthenticated = false;
-    },
-
-    // ==============================
-    // CURRENT USER
-    // ==============================
-
-    userRequest: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-
-    userSuccess: (state, action) => {
-      state.loading = false;
-      state.error = null;
-
-      state.user = action.payload;
-
-      state.isAuthenticated = true;
-    },
-
-    userFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-
-      state.user = null;
-      state.accessToken = null;
-      state.isAuthenticated = false;
-
-      localStorage.removeItem("access_token");
     },
 
     // ==============================
@@ -115,7 +75,6 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
 
-      state.user = null;
       state.accessToken = null;
       state.isAuthenticated = false;
 
@@ -126,7 +85,6 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
 
-      state.user = null;
       state.accessToken = null;
       state.isAuthenticated = false;
 
@@ -143,10 +101,6 @@ const authSlice = createSlice({
   },
 });
 
-// ==============================
-// EXPORT ACTIONS
-// ==============================
-
 export const {
   registerRequest,
   registerSuccess,
@@ -156,19 +110,11 @@ export const {
   loginSuccess,
   loginFailure,
 
-  userRequest,
-  userSuccess,
-  userFailure,
-
   logoutRequest,
   logoutSuccess,
   logoutFailure,
 
   clearAuthError,
 } = authSlice.actions;
-
-// ==============================
-// EXPORT REDUCER
-// ==============================
 
 export default authSlice.reducer;

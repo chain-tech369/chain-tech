@@ -1,30 +1,14 @@
-// src/actions/userActions.js
-
 import {
   getCurrentUser,
-} from "../apis/userApi";
+  updateUser,
+} from "../apis/usercurrentApi";
 
-export const fetchCurrentUser = () => async (dispatch) => {
-  dispatch({
-    type: "USER_LOADING",
-  });
+// Get current user
+export const fetchCurrentUser = async () => {
+  return await getCurrentUser();
+};
 
-  try {
-    const user = await getCurrentUser();
-
-    dispatch({
-      type: "USER_SUCCESS",
-      payload: user,
-    });
-
-    return user;
-  } catch (error) {
-    dispatch({
-      type: "USER_ERROR",
-      payload:
-        error.response?.data || error.message,
-    });
-
-    throw error;
-  }
+// Update user
+export const editUser = async (userId, userData) => {
+  return await updateUser(userId, userData);
 };

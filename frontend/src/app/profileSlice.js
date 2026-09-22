@@ -1,21 +1,19 @@
 const initialState = {
   profile: null,
+
   loading: false,
   updating: false,
   creating: false,
   deleting: false,
+
   error: null,
 };
 
-export default function profileReducer(
-  state = initialState,
-  action
-) {
+const profileReducer = (state = initialState, action) => {
   switch (action.type) {
     // ==========================================
-    // FETCH
+    // FETCH PROFILE
     // ==========================================
-
     case "profile/fetchProfileStart":
       return {
         ...state,
@@ -39,9 +37,8 @@ export default function profileReducer(
       };
 
     // ==========================================
-    // CREATE
+    // CREATE PROFILE
     // ==========================================
-
     case "profile/createProfileStart":
       return {
         ...state,
@@ -65,9 +62,8 @@ export default function profileReducer(
       };
 
     // ==========================================
-    // UPDATE
+    // UPDATE PROFILE
     // ==========================================
-
     case "profile/updateProfileStart":
       return {
         ...state,
@@ -91,9 +87,8 @@ export default function profileReducer(
       };
 
     // ==========================================
-    // DELETE
+    // DELETE PROFILE
     // ==========================================
-
     case "profile/deleteProfileStart":
       return {
         ...state,
@@ -116,7 +111,12 @@ export default function profileReducer(
         error: action.payload,
       };
 
+    // ==========================================
+    // DEFAULT
+    // ==========================================
     default:
       return state;
   }
-}
+};
+
+export default profileReducer;

@@ -23,24 +23,31 @@ class Profile(Base):
     phone = Column(
         String(30),
         nullable=True,
+        default="",
+        server_default="",
     )
 
     profile_image = Column(
         String(500),
         nullable=True,
+        default="",
+        server_default="",
     )
 
     bio = Column(
         Text,
         nullable=True,
+        default="",
+        server_default="",
     )
 
     address = Column(
         String(255),
         nullable=True,
+        default="",
+        server_default="",
     )
 
-    # Relationship
     user = relationship(
         "User",
         back_populates="profile",

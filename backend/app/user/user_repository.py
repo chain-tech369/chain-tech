@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.user.user_models import User
 from app.user.user_schemas import UserCreate, UserUpdate
+from app.profile.profile_model import Profile
 
 
 class UserRepository:
@@ -32,6 +33,7 @@ class UserRepository:
         hashed_password: str,
         role_id: int,
     ):
+        # Create User
         user = User(
             first_name=user_data.first_name,
             last_name=user_data.last_name,
@@ -40,6 +42,10 @@ class UserRepository:
             role_id=role_id,
         )
 
+        # Create empty Profile automatically
+        user.profile = Profile()
+
+        # Save User + Profile
         self.db.add(user)
         self.db.commit()
         self.db.refresh(user)

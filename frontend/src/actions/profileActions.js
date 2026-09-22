@@ -1,5 +1,5 @@
 import {
-  getProfileByUserId,
+  getProfile,
   createProfile,
   updateProfile,
   deleteProfile,
@@ -15,7 +15,7 @@ export const fetchProfile = (userId) => async (dispatch) => {
   });
 
   try {
-    const profile = await getProfileByUserId(userId);
+    const profile = await getProfile(userId);
 
     dispatch({
       type: "profile/fetchProfileSuccess",
@@ -129,6 +129,8 @@ export const removeProfile =
         type: "profile/deleteProfileSuccess",
         payload: userId,
       });
+
+      return true;
     } catch (error) {
       const message =
         error?.response?.data?.detail ||

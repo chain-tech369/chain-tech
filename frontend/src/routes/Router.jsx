@@ -39,6 +39,7 @@ import {
   ProtectedHomePage,
   ProtectedServicePage,
   ProfilePage,
+  currentUserPage,
 } from "../pages/protected-pages";
 
 // =====================================
@@ -62,32 +63,39 @@ export const router = createBrowserRouter([
   // =====================================
   {
     element: <PublicLayout />,
+
     children: [
+      // HOME
       {
         path: "/",
         element: <HomePage />,
       },
 
+      // ABOUT
       {
         path: "/about",
         element: <AboutPage />,
       },
 
+      // CONTACT
       {
         path: "/contact",
         element: <ContactPage />,
       },
 
+      // SERVICES
       {
         path: "/services",
         element: <ServicePage />,
       },
 
+      // LOGIN
       {
         path: "/login",
         element: <LoginPage />,
       },
 
+      // REGISTER
       {
         path: "/register",
         element: <RegisterPage />,
@@ -100,6 +108,7 @@ export const router = createBrowserRouter([
   // =====================================
   {
     element: <ProtectedLayout />,
+     loader: currentUserLoader,
     children: [
       // =====================================
       // DASHBOARD
@@ -150,13 +159,23 @@ export const router = createBrowserRouter([
       },
 
       // =====================================
+      // CURRENT USER
+      // =====================================
+      {
+        path: "/current-user",
+        element: <currentUserPage />,
+      },
+
+      // =====================================
       // ACCOUNT / PROFILE LAYOUT
       // =====================================
       {
         element: <ProfileLayout />,
+        loader: currentUserLoader,
         children: [
           // =====================================
           // ACCOUNT DASHBOARD
+          // GET /users/me
           // =====================================
           {
             path: "/account-dashboard",
@@ -166,18 +185,22 @@ export const router = createBrowserRouter([
 
           // =====================================
           // EDIT ACCOUNT
+          // GET /users/me
           // =====================================
           {
             path: "/account/edit",
             element: <EditAccountPage />,
+            loader: currentUserLoader,
           },
 
           // =====================================
           // EDIT PROFILE
+          // GET CURRENT USER + PROFILE
           // =====================================
           {
             path: "/profile/edit",
             element: <EditProfilePage />,
+            loader: profileLoader,
           },
 
           // =====================================
@@ -186,7 +209,6 @@ export const router = createBrowserRouter([
           {
             path: "/settings",
             element: <SettingsPage />,
-            
           },
 
           // =====================================
@@ -201,6 +223,7 @@ export const router = createBrowserRouter([
 
           // =====================================
           // PROFILE DETAIL
+          // GET CURRENT PROFILE
           // =====================================
           {
             path: "/profile-detail",

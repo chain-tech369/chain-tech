@@ -1,10 +1,9 @@
 import api from "./axios";
 
 // ==========================================
-// GET PROFILE BY USER ID
-// GET /profiles/{user_id}
+// GET PROFILE
 // ==========================================
-export const getProfileByUserId = async (userId) => {
+export const getProfile = async (userId) => {
   const response = await api.get(`/profiles/${userId}`);
 
   return response.data;
@@ -12,7 +11,6 @@ export const getProfileByUserId = async (userId) => {
 
 // ==========================================
 // CREATE PROFILE
-// POST /profiles/{user_id}
 // ==========================================
 export const createProfile = async (userId, profileData) => {
   const response = await api.post(
@@ -25,7 +23,6 @@ export const createProfile = async (userId, profileData) => {
 
 // ==========================================
 // UPDATE PROFILE
-// PUT /profiles/{user_id}
 // ==========================================
 export const updateProfile = async (userId, profileData) => {
   const response = await api.put(
@@ -38,8 +35,11 @@ export const updateProfile = async (userId, profileData) => {
 
 // ==========================================
 // DELETE PROFILE
-// DELETE /profiles/{user_id}
 // ==========================================
 export const deleteProfile = async (userId) => {
-  await api.delete(`/profiles/${userId}`);
+  const response = await api.delete(
+    `/profiles/${userId}`
+  );
+
+  return response.data;
 };

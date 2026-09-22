@@ -1,66 +1,43 @@
-import { useEffect } from "react";
+import { useLoaderData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import ProfileForm from "../../components/forms/ProfileForm";
 
-import { fetchCurrentUser } from "../../actions/userActions";
-
-import {
-  fetchProfile,
-  editProfile,
-} from "../../actions/profileActions";
+import { editProfile } from "../../actions/profileActions";
 
 export default function EditProfilePage() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   // ==========================================
-  // USER STATE
+  // LOADER DATA
   // ==========================================
 
-  const currentUser = useSelector(
-    (state) => state.user?.currentUser
-  );
+  const loaderData = useLoaderData();
+
+  const user = loaderData?.user || null;
+  const profile = loaderData?.profile || null;
 
   // ==========================================
-  // PROFILE STATE
+  // REDUX STATE
   // ==========================================
 
   const profileState = useSelector(
     (state) => state.profile
   );
 
-  const profile = profileState?.profile;
-  const loading = profileState?.loading ?? false;
-  const error = profileState?.error ?? null;
+  const updating =
+    profileState?.updating || false;
 
-  // ==========================================
-  // LOAD CURRENT USER
-  // ==========================================
-
-  useEffect(() => {
-    if (!currentUser) {
-      dispatch(fetchCurrentUser());
-    }
-  }, [currentUser, dispatch]);
-
-  // ==========================================
-  // LOAD PROFILE
-  // ==========================================
-
-  useEffect(() => {
-    if (currentUser?.id) {
-      dispatch(fetchProfile(currentUser.id));
-    }
-  }, [currentUser?.id, dispatch]);
+  const error =
+    profileState?.error || null;
 
   // ==========================================
   // SAVE PROFILE
   // ==========================================
 
   const handleSave = async (profileData) => {
-    if (!currentUser?.id) {
+    if (!user?.id) {
       throw new Error(
         "User information is not available."
       );
@@ -68,12 +45,10 @@ export default function EditProfilePage() {
 
     await dispatch(
       editProfile(
-        currentUser.id,
+        user.id,
         profileData
       )
     );
-
-    navigate("/profile");
   };
 
   // ==========================================
@@ -81,76 +56,8 @@ export default function EditProfilePage() {
   // ==========================================
 
   const handleCancel = () => {
-    navigate("/profile");
+    window.history.back();
   };
-
-  // ==========================================
-  // USER LOADING
-  // ==========================================
-
-  if (!currentUser) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <p className="text-slate-600">
-            Loading user information...
-          </p>
-        </div>
-      </main>
-    );
-  }
-
-  // ==========================================
-  // PROFILE LOADING
-  // ==========================================
-
-  if (loading && !profile) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <p className="text-slate-600">
-            Loading profile information...
-          </p>
-        </div>
-      </main>
-    );
-  }
-
-  // ==========================================
-  // ERROR
-  // ==========================================
-
-  if (error && !profile) {
-    const errorMessage =
-      typeof error === "string"
-        ? error
-        : error?.msg ||
-          error?.detail ||
-          "Failed to load profile.";
-
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-        <div className="w-full max-w-md rounded-2xl border border-red-200 bg-red-50 p-8">
-
-          <h1 className="text-lg font-bold text-red-700">
-            Unable to load profile
-          </h1>
-
-          <p className="mt-2 text-sm text-red-600">
-            {errorMessage}
-          </p>
-
-          <NavLink
-            to="/account-dashboard"
-            className="mt-6 inline-flex rounded-xl bg-blue-950 px-5 py-3 text-sm font-semibold text-white"
-          >
-            Back to Account Dashboard
-          </NavLink>
-
-        </div>
-      </main>
-    );
-  }
 
   // ==========================================
   // PAGE
@@ -161,7 +68,9 @@ export default function EditProfilePage() {
 
       <div className="mx-auto max-w-5xl">
 
-        {/* HEADER */}
+        {/* =====================================
+            PAGE HEADER
+        ====================================== */}
 
         <div className="mb-8">
 
@@ -179,12 +88,15 @@ export default function EditProfilePage() {
 
         </div>
 
-
-        {/* CARD */}
+        {/* =====================================
+            FORM CARD
+        ====================================== */}
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
 
-          {/* CARD HEADER */}
+          {/* =====================================
+              CARD HEADER
+          ====================================== */}
 
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
@@ -195,22 +107,64 @@ export default function EditProfilePage() {
               </h2>
 
               <p className="mt-1 text-sm text-slate-500">
-                Update your phone, address, bio, and profile image.
+                Update your phone number, address, profile image, or bio.
               </p>
 
             </div>
 
             <NavLink
-              to="/account-dashboard"
+              to="/profile"
               className="inline-flex items-center justify-center rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
             >
-              Back to Dashboard
+              Back to Profile
             </NavLink>
 
           </div>
 
+          {/* =====================================
+              USER INFORMATION
+          ====================================== */}
 
-          {/* ERROR */}
+          <div className="mb-8 rounded-xl border border-slate-200 bg-slate-50 p-5">
+
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Current Account
+            </p>
+
+            <h3 className="mt-1 text-lg font-bold text-blue-950">
+              {user?.first_name || ""}{" "}
+              {user?.last_name || ""}
+            </h3>
+
+            <p className="mt-1 text-sm text-slate-500">
+              {user?.email || ""}
+            </p>
+
+          </div>
+
+          {/* =====================================
+              PROFILE IMAGE PREVIEW
+          ====================================== */}
+
+          {profile?.profile_image && (
+            <div className="mb-8 rounded-xl border border-slate-200 bg-slate-50 p-5">
+
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Current Profile Image
+              </p>
+
+              <img
+                src={profile.profile_image}
+                alt="Current profile"
+                className="h-24 w-24 rounded-full object-cover border-2 border-white shadow-sm"
+              />
+
+            </div>
+          )}
+
+          {/* =====================================
+              REDUX ERROR
+          ====================================== */}
 
           {error && (
             <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
@@ -218,18 +172,29 @@ export default function EditProfilePage() {
                 ? error
                 : error?.msg ||
                   error?.detail ||
-                  "Failed to update profile."}
+                  "Something went wrong."}
             </div>
           )}
 
-
-          {/* FORM */}
+          {/* =====================================
+              FORM
+          ====================================== */}
 
           <ProfileForm
             profile={profile}
             onSave={handleSave}
             onCancel={handleCancel}
           />
+
+          {/* =====================================
+              UPDATING MESSAGE
+          ====================================== */}
+
+          {updating && (
+            <div className="mt-4 rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-700">
+              Updating your profile...
+            </div>
+          )}
 
         </div>
 

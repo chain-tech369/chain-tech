@@ -2,25 +2,26 @@ import {
   fetchCurrentUserStart,
   fetchCurrentUserSuccess,
   fetchCurrentUserFailure,
+
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
 } from "../app/userSlice";
 
 import {
-  getCurrentUser,
-  updateUser,
-} from "../apis/userApi";
+  fetchCurrentUser,
+  editUser,
+} from "./actions/CurrentUserActions";
 
 // ==========================================
 // GET CURRENT USER
 // ==========================================
 
-export const fetchCurrentUser = () => async (dispatch) => {
+export const fetchCurrentUserRedux = () => async (dispatch) => {
   dispatch(fetchCurrentUserStart());
 
   try {
-    const user = await getCurrentUser();
+    const user = await fetchCurrentUser();
 
     dispatch(fetchCurrentUserSuccess(user));
 
@@ -41,26 +42,27 @@ export const fetchCurrentUser = () => async (dispatch) => {
 // UPDATE USER
 // ==========================================
 
-export const editUser = (userId, userData) => async (dispatch) => {
-  dispatch(updateUserStart());
+export const editUserRedux =
+  (userId, userData) => async (dispatch) => {
+    dispatch(updateUserStart());
 
-  try {
-    const updatedUser = await updateUser(
-      userId,
-      userData
-    );
+    try {
+      const updatedUser = await editUser(
+        userId,
+        userData
+      );
 
-    dispatch(updateUserSuccess(updatedUser));
+      dispatch(updateUserSuccess(updatedUser));
 
-    return updatedUser;
-  } catch (error) {
-    const message =
-      error.response?.data?.detail ||
-      error.message ||
-      "Failed to update user.";
+      return updatedUser;
+    } catch (error) {
+      const message =
+        error.response?.data?.detail ||
+        error.message ||
+        "Failed to update user.";
 
-    dispatch(updateUserFailure(message));
+      dispatch(updateUserFailure(message));
 
-    throw error;
-  }
-};
+      throw error;
+    }
+  };

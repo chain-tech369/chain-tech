@@ -1,9 +1,29 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-export default function ProtectedNavbar() {
+import UserAvatar from "../uis/UserAvatar";
+
+// =====================================================
+// PROTECTED NAVBAR
+// =====================================================
+
+export default function ProtectedNavbar({ currentUser }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+
+  // =====================================================
+  // USER NAME
+  // =====================================================
+
+  const firstName = currentUser?.first_name || "";
+  const lastName = currentUser?.last_name || "";
+
+  const fullName =
+    `${firstName} ${lastName}`.trim();
+
+  // =====================================================
+  // NAVIGATION ITEMS
+  // =====================================================
 
   const navItems = [
     {
@@ -20,21 +40,39 @@ export default function ProtectedNavbar() {
     },
   ];
 
-  const profileImage =
-    "https://res.cloudinary.com/dtz0urit6/image/upload/f_auto,q_auto/cloudinary-tools-uploads/wf7fm0ktdkg7czzauwo4";
+  // =====================================================
+  // CLOSE PROFILE MENU
+  // =====================================================
+
+  const closeProfile = () => {
+    setProfileOpen(false);
+  };
+
+  // =====================================================
+  // CLOSE MOBILE MENU
+  // =====================================================
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-blue-900/40 bg-blue-950/95 backdrop-blur-xl">
+
       {/* =====================================================
           DESKTOP NAVBAR
       ===================================================== */}
 
       <nav className="mx-2 hidden max-w-7xl items-center justify-between px-2 py-3 sm:px-6 lg:px-4 md:flex">
-        {/* ================= LOGO ================= */}
 
-        <NavLink to="/home" className="flex items-center gap-3">
+        {/* LOGO */}
+
+        <NavLink
+          to="/home"
+          className="flex items-center gap-3"
+        >
           <img
-            src={profileImage}
+            src="https://res.cloudinary.com/dtz0urit6/image/upload/f_auto,q_auto/cloudinary-tools-uploads/wf7fm0ktdkg7czzauwo4"
             alt="Chain-Tech Logo"
             className="h-10 w-10 object-contain"
           />
@@ -42,7 +80,9 @@ export default function ProtectedNavbar() {
           <div>
             <span className="block text-lg font-black tracking-wide text-white">
               CHAIN
-              <span className="text-yellow-400">-TECH</span>
+              <span className="text-yellow-400">
+                -TECH
+              </span>
             </span>
 
             <span className="hidden text-[10px] tracking-widest text-blue-300 sm:block">
@@ -51,9 +91,10 @@ export default function ProtectedNavbar() {
           </div>
         </NavLink>
 
-        {/* ================= CENTER NAVIGATION ================= */}
+        {/* CENTER NAVIGATION */}
 
         <div className="hidden items-center gap-8 md:flex">
+
           {navItems.map((item) => (
             <NavLink
               key={item.path}
@@ -69,11 +110,13 @@ export default function ProtectedNavbar() {
               {item.name}
             </NavLink>
           ))}
+
         </div>
 
-        {/* ================= RIGHT SIDE ================= */}
+        {/* RIGHT SIDE */}
 
         <div className="hidden items-center gap-3 md:flex">
+
           {/* JOIN US */}
 
           <NavLink
@@ -87,60 +130,67 @@ export default function ProtectedNavbar() {
             Join Us
           </NavLink>
 
-          {/* ================= PROFILE BUTTON ================= */}
+          {/* PROFILE */}
 
           <div className="relative">
+
             <button
               type="button"
-              onClick={() => setProfileOpen(!profileOpen)}
-              title="Account menu"
+              onClick={() =>
+                setProfileOpen(!profileOpen)
+              }
+              title={fullName || "Account menu"}
               aria-label="Account menu"
               aria-expanded={profileOpen}
-              className={`block h-10 w-10 overflow-hidden rounded-full border-2 border-amber-400 transition hover:scale-105 ${
+              className={`block h-10 w-10 overflow-hidden rounded-full transition hover:scale-105 ${
                 profileOpen
                   ? "ring-2 ring-yellow-300 ring-offset-2 ring-offset-blue-950"
                   : ""
               }`}
             >
-              <img
-                src={profileImage}
-                alt="Profile"
-                className="h-full w-full rounded-full object-cover"
+              <UserAvatar
+                currentUser={currentUser}
+                size="h-10 w-10"
               />
             </button>
 
-            {/* ================= PROFILE MENU ================= */}
+            {/* PROFILE DROPDOWN */}
 
             {profileOpen && (
               <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-xl border border-blue-800 bg-blue-950 shadow-2xl">
+
                 {/* USER HEADER */}
 
                 <div className="border-b border-blue-800 px-4 py-4">
+
                   <div className="flex items-center gap-3">
-                    <img
-                      src={profileImage}
-                      alt="Profile"
-                      className="h-11 w-11 rounded-full border-2 border-amber-400 object-cover"
+
+                    <UserAvatar
+                      currentUser={currentUser}
+                      size="h-11 w-11"
                     />
 
                     <div>
                       <p className="font-semibold text-white">
-                        David Kuron
+                        {fullName || "Loading..."}
                       </p>
 
                       <p className="text-xs text-blue-300">
                         My Account
                       </p>
                     </div>
+
                   </div>
+
                 </div>
 
                 {/* MENU ITEMS */}
 
                 <div className="p-2">
+
                   <NavLink
                     to="/account-dashboard"
-                    onClick={() => setProfileOpen(false)}
+                    onClick={closeProfile}
                     className={({ isActive }) =>
                       `block rounded-lg px-4 py-3 text-sm font-medium transition ${
                         isActive
@@ -152,10 +202,9 @@ export default function ProtectedNavbar() {
                     Account Dashboard
                   </NavLink>
 
-
                   <NavLink
                     to="/account/edit"
-                    onClick={() => setProfileOpen(false)}
+                    onClick={closeProfile}
                     className={({ isActive }) =>
                       `block rounded-lg px-4 py-3 text-sm font-medium transition ${
                         isActive
@@ -169,7 +218,7 @@ export default function ProtectedNavbar() {
 
                   <NavLink
                     to="/profile/edit"
-                    onClick={() => setProfileOpen(false)}
+                    onClick={closeProfile}
                     className={({ isActive }) =>
                       `block rounded-lg px-4 py-3 text-sm font-medium transition ${
                         isActive
@@ -183,7 +232,7 @@ export default function ProtectedNavbar() {
 
                   <NavLink
                     to="/settings"
-                    onClick={() => setProfileOpen(false)}
+                    onClick={closeProfile}
                     className={({ isActive }) =>
                       `block rounded-lg px-4 py-3 text-sm font-medium transition ${
                         isActive
@@ -194,23 +243,30 @@ export default function ProtectedNavbar() {
                   >
                     Settings
                   </NavLink>
+
                 </div>
 
                 {/* LOGOUT */}
 
                 <div className="border-t border-blue-800 p-2">
+
                   <NavLink
                     to="/logout"
-                    onClick={() => setProfileOpen(false)}
+                    onClick={closeProfile}
                     className="block rounded-lg px-4 py-3 text-sm font-semibold text-red-300 transition hover:bg-red-950"
                   >
                     Logout
                   </NavLink>
+
                 </div>
+
               </div>
             )}
+
           </div>
+
         </div>
+
       </nav>
 
       {/* =====================================================
@@ -218,42 +274,46 @@ export default function ProtectedNavbar() {
       ===================================================== */}
 
       <div className="md:hidden">
-        {/* =================================================
-            MOBILE NAVBAR 1
-            LOGO ONLY
-        ================================================= */}
+
+        {/* MOBILE LOGO */}
 
         <div className="flex items-center justify-center px-4 py-4">
+
           <NavLink
             to="/home"
-            onClick={() => setMenuOpen(false)}
+            onClick={closeMenu}
             className="flex items-center gap-3"
           >
+
             <img
-              src={profileImage}
+              src="https://res.cloudinary.com/dtz0urit6/image/upload/f_auto,q_auto/cloudinary-tools-uploads/wf7fm0ktdkg7czzauwo4"
               alt="Chain-Tech Logo"
               className="h-10 w-10 object-contain"
             />
 
             <div>
+
               <span className="block text-lg font-black tracking-wide text-white">
                 CHAIN
-                <span className="text-yellow-400">-TECH</span>
+                <span className="text-yellow-400">
+                  -TECH
+                </span>
               </span>
 
               <span className="block text-[10px] tracking-widest text-blue-300">
                 DIGITAL TECHNOLOGY
               </span>
+
             </div>
+
           </NavLink>
+
         </div>
 
-        {/* =================================================
-            MOBILE NAVBAR 2
-            MENU + JOIN US + LOGOUT + PROFILE
-        ================================================= */}
+        {/* MOBILE SECOND ROW */}
 
         <div className="flex items-center justify-between border-t border-blue-900/40 px-4 py-3">
+
           {/* MENU BUTTON */}
 
           <button
@@ -263,6 +323,7 @@ export default function ProtectedNavbar() {
             aria-label="Toggle navigation"
             aria-expanded={menuOpen}
           >
+
             {menuOpen ? (
               <svg
                 className="h-5 w-5"
@@ -294,11 +355,13 @@ export default function ProtectedNavbar() {
             )}
 
             {menuOpen ? "Close" : "Menu"}
+
           </button>
 
           {/* RIGHT SIDE */}
 
           <div className="flex items-center gap-2">
+
             {/* JOIN US */}
 
             <NavLink
@@ -321,25 +384,27 @@ export default function ProtectedNavbar() {
               Logout
             </NavLink>
 
-            {/* PROFILE BUTTON */}
+            {/* PROFILE */}
 
             <div className="relative">
+
               <button
                 type="button"
-                onClick={() => setProfileOpen(!profileOpen)}
-                title="Account menu"
+                onClick={() =>
+                  setProfileOpen(!profileOpen)
+                }
+                title={fullName || "Account menu"}
                 aria-label="Account menu"
                 aria-expanded={profileOpen}
-                className={`block h-9 w-9 overflow-hidden rounded-full border-2 border-amber-400 transition ${
+                className={`block h-9 w-9 overflow-hidden rounded-full transition ${
                   profileOpen
                     ? "ring-2 ring-yellow-300 ring-offset-2 ring-offset-blue-950"
                     : ""
                 }`}
               >
-                <img
-                  src={profileImage}
-                  alt="Profile"
-                  className="h-full w-full rounded-full object-cover"
+                <UserAvatar
+                  currentUser={currentUser}
+                  size="h-9 w-9"
                 />
               </button>
 
@@ -347,34 +412,41 @@ export default function ProtectedNavbar() {
 
               {profileOpen && (
                 <div className="absolute right-0 top-12 z-50 w-60 overflow-hidden rounded-xl border border-blue-800 bg-blue-950 shadow-2xl">
+
                   {/* USER HEADER */}
 
                   <div className="border-b border-blue-800 px-4 py-4">
+
                     <div className="flex items-center gap-3">
-                      <img
-                        src={profileImage}
-                        alt="Profile"
-                        className="h-10 w-10 rounded-full border-2 border-amber-400 object-cover"
+
+                      <UserAvatar
+                        currentUser={currentUser}
+                        size="h-10 w-10"
                       />
 
                       <div>
+
                         <p className="font-semibold text-white">
-                          David Kuron
+                          {fullName || "Loading..."}
                         </p>
 
                         <p className="text-xs text-blue-300">
                           My Account
                         </p>
+
                       </div>
+
                     </div>
+
                   </div>
 
                   {/* MENU ITEMS */}
 
                   <div className="p-2">
+
                     <NavLink
                       to="/account-dashboard"
-                      onClick={() => setProfileOpen(false)}
+                      onClick={closeProfile}
                       className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-900"
                     >
                       Account Dashboard
@@ -382,7 +454,7 @@ export default function ProtectedNavbar() {
 
                     <NavLink
                       to="/profile"
-                      onClick={() => setProfileOpen(false)}
+                      onClick={closeProfile}
                       className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-900"
                     >
                       Profile
@@ -390,7 +462,7 @@ export default function ProtectedNavbar() {
 
                     <NavLink
                       to="/account/edit"
-                      onClick={() => setProfileOpen(false)}
+                      onClick={closeProfile}
                       className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-900"
                     >
                       Edit Account
@@ -398,7 +470,7 @@ export default function ProtectedNavbar() {
 
                     <NavLink
                       to="/profile/edit"
-                      onClick={() => setProfileOpen(false)}
+                      onClick={closeProfile}
                       className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-900"
                     >
                       Edit Profile
@@ -406,43 +478,51 @@ export default function ProtectedNavbar() {
 
                     <NavLink
                       to="/settings"
-                      onClick={() => setProfileOpen(false)}
+                      onClick={closeProfile}
                       className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-900"
                     >
                       Settings
                     </NavLink>
+
                   </div>
 
                   {/* LOGOUT */}
 
                   <div className="border-t border-blue-800 p-2">
+
                     <NavLink
                       to="/logout"
-                      onClick={() => setProfileOpen(false)}
+                      onClick={closeProfile}
                       className="block rounded-lg px-4 py-3 text-sm font-semibold text-red-300 transition hover:bg-red-950"
                     >
                       Logout
                     </NavLink>
+
                   </div>
+
                 </div>
               )}
+
             </div>
+
           </div>
+
         </div>
 
-        {/* =================================================
-            MOBILE MENU
-        ================================================= */}
+        {/* MOBILE MENU */}
 
         {menuOpen && (
           <div className="border-t border-blue-900/40 bg-blue-950">
+
             <div className="px-4 py-4">
+
               <div className="flex flex-col gap-2">
+
                 {navItems.map((item) => (
                   <NavLink
                     key={item.path}
                     to={item.path}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={closeMenu}
                     className={({ isActive }) =>
                       `rounded-lg px-4 py-3 transition ${
                         isActive
@@ -455,11 +535,9 @@ export default function ProtectedNavbar() {
                   </NavLink>
                 ))}
 
-                {/* DASHBOARD */}
-
                 <NavLink
                   to="/dashboard"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={closeMenu}
                   className={({ isActive }) =>
                     `rounded-lg px-4 py-3 transition ${
                       isActive
@@ -470,10 +548,14 @@ export default function ProtectedNavbar() {
                 >
                   Dashboard
                 </NavLink>
+
               </div>
+
             </div>
+
           </div>
         )}
+
       </div>
     </header>
   );

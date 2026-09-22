@@ -1,25 +1,42 @@
-import { getProfileByUserId } from "../apis/profileApi";
+import { getCurrentUser } from "../apis/userApi";
+import { getProfile } from "../apis/profileApi";
 
 // ==========================================
 // PROFILE LOADER
-// Loads the profile for the current user
+// Loads the profile for the currently logged-in user
 // ==========================================
-export const profileLoader = async ({ params }) => {
+export const profileLoader = async () => {
   try {
-    const userId = params.userId;
+    // Get currently logged-in user
+    const user = await getCurrentUser();
 
-    if (!userId) {
-      throw new Error("User ID is required");
+    console.log("CURRENT USER:", user);
+
+    if (!user?.id) {
+      throw new Error("User information is not available.");
     }
 
-    const profile = await getProfileByUserId(userId);
+    // Get profile using the current user's ID
+    const profile = await getProfile(user.id);
 
-    return profile;
+    console.log("CURRENT PROFILE:", profile);
+
+    // Send both user and profile to the page
+    return {
+      user,
+      profile,
+    };
   } catch (error) {
     console.error("Failed to load profile:", error);
+    console.error("RESPONSE:", error.response?.data);
+    console.error("STATUS:", error.response?.status);
 
     throw new Response("Failed to load profile", {
       status: error.response?.status || 500,
+      statusText:
+        error.response?.data?.detail ||
+        error.message ||
+        "Failed to load profile",
     });
   }
 };

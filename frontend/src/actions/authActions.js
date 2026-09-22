@@ -5,9 +5,6 @@ import {
   loginRequest,
   loginSuccess,
   loginFailure,
-  userRequest,
-  userSuccess,
-  userFailure,
   logoutRequest,
   logoutSuccess,
   logoutFailure,
@@ -16,106 +13,103 @@ import {
 import {
   registerUser,
   loginUser,
-  getCurrentUser,
   logoutUser,
 } from "../apis/authApi";
 
-// ========================================
+import {
+  clearCurrentUser,
+} from "../app/userSlice";
+
+import { fetchCurrentUserRedux } from "./userReduxActions";
+
+// =========================
 // REGISTER
-// ========================================
+// =========================
 
-export const registerAction = (userData) => async (dispatch) => {
-  dispatch(registerRequest());
+export const registerAction =
+  (userData) => async (dispatch) => {
+    dispatch(registerRequest());
 
-  try {
-    const data = await registerUser(userData);
+    try {
+      const data = await registerUser(userData);
 
-    dispatch(registerSuccess(data));
+      dispatch(registerSuccess(data));
 
-    return data;
-  } catch (error) {
-    const message =
-      error.response?.data?.detail ||
-      error.message ||
-      "Registration failed";
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data?.detail ||
+        error.message ||
+        "Registration failed";
 
-    dispatch(registerFailure(message));
+      dispatch(registerFailure(message));
 
-    throw error;
-  }
-};
+      throw error;
+    }
+  };
 
-// ========================================
+// =========================
 // LOGIN
-// ========================================
+// =========================
 
-export const loginAction = (credentials) => async (dispatch) => {
-  dispatch(loginRequest());
+export const loginAction =
+  (credentials) => async (dispatch) => {
+    dispatch(loginRequest());
 
-  try {
-    const data = await loginUser(credentials);
+    try {
+      // 1. Login with email and password
+      const data = await loginUser(credentials);
 
-    dispatch(loginSuccess(data));
+      // 2. Save access token
+      dispatch(loginSuccess(data));
 
-    return data;
-  } catch (error) {
-    const message =
-      error.response?.data?.detail ||
-      error.message ||
-      "Login failed";
+      // 3. Get current logged-in user
+      const currentUser = await dispatch(
+        fetchCurrentUserRedux()
+      );
 
-    dispatch(loginFailure(message));
+      return {
+        ...data,
+        currentUser,
+      };
+    } catch (error) {
+      const message =
+        error.response?.data?.detail ||
+        error.message ||
+        "Login failed";
 
-    throw error;
-  }
-};
+      dispatch(loginFailure(message));
 
-// ========================================
-// GET CURRENT USER
-// ========================================
+      throw error;
+    }
+  };
 
-export const getCurrentUserAction = () => async (dispatch) => {
-  dispatch(userRequest());
-
-  try {
-    const data = await getCurrentUser();
-
-    dispatch(userSuccess(data));
-
-    return data;
-  } catch (error) {
-    const message =
-      error.response?.data?.detail ||
-      error.message ||
-      "Failed to get current user";
-
-    dispatch(userFailure(message));
-
-    throw error;
-  }
-};
-
-// ========================================
+// =========================
 // LOGOUT
-// ========================================
+// =========================
 
-export const logoutAction = () => async (dispatch) => {
-  dispatch(logoutRequest());
+export const logoutAction =
+  () => async (dispatch) => {
+    dispatch(logoutRequest());
 
-  try {
-    const data = await logoutUser();
+    try {
+      const data = await logoutUser();
 
-    dispatch(logoutSuccess());
+      // 1. Clear authentication
+      dispatch(logoutSuccess());
 
-    return data;
-  } catch (error) {
-    const message =
-      error.response?.data?.detail ||
-      error.message ||
-      "Logout failed";
+      // 2. Clear the previous user's information
+      dispatch(clearCurrentUser());
 
-    dispatch(logoutFailure(message));
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data?.detail ||
+        error.message ||
+        "Logout failed";
 
-    throw error;
-  }
-};
+      dispatch(logoutFailure(message));
+
+      throw error;
+    }
+  };
