@@ -7,7 +7,7 @@ import ProfileLayout from "../layouts/ProfileLayout";
 // =====================================
 // LOADERS
 // =====================================
-import { currentUserLoader } from "../loaders/userLoader";
+import { currentUserLoader, userLoader } from "../loaders/userLoader";
 import { profileLoader } from "../loaders/profileLoader";
 
 // =====================================
@@ -33,13 +33,12 @@ import {
 // PROTECTED PAGES
 // =====================================
 import {
-  DashboardPage,
   JoinUsPage,
   ServiceRequestPage,
   ProtectedHomePage,
   ProtectedServicePage,
   ProfilePage,
-  currentUserPage,
+  CurrentUserPage,
 } from "../pages/protected-pages";
 
 // =====================================
@@ -65,37 +64,49 @@ export const router = createBrowserRouter([
     element: <PublicLayout />,
 
     children: [
-      // HOME
+      // =====================================
+      // PUBLIC HOME
+      // =====================================
       {
         path: "/",
         element: <HomePage />,
       },
 
+      // =====================================
       // ABOUT
+      // =====================================
       {
         path: "/about",
         element: <AboutPage />,
       },
 
+      // =====================================
       // CONTACT
+      // =====================================
       {
         path: "/contact",
         element: <ContactPage />,
       },
 
+      // =====================================
       // SERVICES
+      // =====================================
       {
         path: "/services",
         element: <ServicePage />,
       },
 
+      // =====================================
       // LOGIN
+      // =====================================
       {
         path: "/login",
         element: <LoginPage />,
       },
 
+      // =====================================
       // REGISTER
+      // =====================================
       {
         path: "/register",
         element: <RegisterPage />,
@@ -108,23 +119,17 @@ export const router = createBrowserRouter([
   // =====================================
   {
     element: <ProtectedLayout />,
-     loader: currentUserLoader,
-    children: [
-      // =====================================
-      // DASHBOARD
-      // =====================================
-      {
-        path: "/dashboard",
-        element: <DashboardPage />,
-      },
+    loader: currentUserLoader,
 
+    children: [
       // =====================================
       // PROTECTED HOME
       // =====================================
       {
-        path: "/home",
+        path: "/protected-home",
         element: <ProtectedHomePage />,
       },
+
 
       // =====================================
       // JOIN US
@@ -146,7 +151,7 @@ export const router = createBrowserRouter([
       // PROTECTED SERVICES
       // =====================================
       {
-        path: "/service",
+        path: "/protected-services",
         element: <ProtectedServicePage />,
       },
 
@@ -163,7 +168,7 @@ export const router = createBrowserRouter([
       // =====================================
       {
         path: "/current-user",
-        element: <currentUserPage />,
+        element: <CurrentUserPage />,
       },
 
       // =====================================
@@ -172,10 +177,10 @@ export const router = createBrowserRouter([
       {
         element: <ProfileLayout />,
         loader: currentUserLoader,
+
         children: [
           // =====================================
           // ACCOUNT DASHBOARD
-          // GET /users/me
           // =====================================
           {
             path: "/account-dashboard",
@@ -185,7 +190,6 @@ export const router = createBrowserRouter([
 
           // =====================================
           // EDIT ACCOUNT
-          // GET /users/me
           // =====================================
           {
             path: "/account/edit",
@@ -195,7 +199,6 @@ export const router = createBrowserRouter([
 
           // =====================================
           // EDIT PROFILE
-          // GET CURRENT USER + PROFILE
           // =====================================
           {
             path: "/profile/edit",
@@ -212,18 +215,16 @@ export const router = createBrowserRouter([
           },
 
           // =====================================
-          // CURRENT USER DETAIL
-          // GET /users/me
+          // USER DETAIL
           // =====================================
           {
             path: "/user-detail",
             element: <UserDetailPage />,
-            loader: currentUserLoader,
+            loader: userLoader,
           },
 
           // =====================================
           // PROFILE DETAIL
-          // GET CURRENT PROFILE
           // =====================================
           {
             path: "/profile-detail",

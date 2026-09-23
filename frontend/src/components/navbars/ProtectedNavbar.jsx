@@ -18,8 +18,7 @@ export default function ProtectedNavbar({ currentUser }) {
   const firstName = currentUser?.first_name || "";
   const lastName = currentUser?.last_name || "";
 
-  const fullName =
-    `${firstName} ${lastName}`.trim();
+  const fullName = `${firstName} ${lastName}`.trim();
 
   // =====================================================
   // NAVIGATION ITEMS
@@ -28,11 +27,11 @@ export default function ProtectedNavbar({ currentUser }) {
   const navItems = [
     {
       name: "Home",
-      path: "/home",
+      path: "/protected-home",
     },
     {
       name: "Our services",
-      path: "/service",
+      path: "/protected-services",
     },
     {
       name: "Service request",
@@ -68,7 +67,7 @@ export default function ProtectedNavbar({ currentUser }) {
         {/* LOGO */}
 
         <NavLink
-          to="/home"
+          to="/protected-home"
           className="flex items-center gap-3"
         >
           <img
@@ -136,9 +135,7 @@ export default function ProtectedNavbar({ currentUser }) {
 
             <button
               type="button"
-              onClick={() =>
-                setProfileOpen(!profileOpen)
-              }
+              onClick={() => setProfileOpen(!profileOpen)}
               title={fullName || "Account menu"}
               aria-label="Account menu"
               aria-expanded={profileOpen}
@@ -280,7 +277,7 @@ export default function ProtectedNavbar({ currentUser }) {
         <div className="flex items-center justify-center px-4 py-4">
 
           <NavLink
-            to="/home"
+            to="/protected-home"
             onClick={closeMenu}
             className="flex items-center gap-3"
           >
@@ -375,24 +372,13 @@ export default function ProtectedNavbar({ currentUser }) {
               Join Us
             </NavLink>
 
-            {/* LOGOUT */}
-
-            <NavLink
-              to="/logout"
-              className="rounded-lg border border-red-500 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-red-600"
-            >
-              Logout
-            </NavLink>
-
             {/* PROFILE */}
 
             <div className="relative">
 
               <button
                 type="button"
-                onClick={() =>
-                  setProfileOpen(!profileOpen)
-                }
+                onClick={() => setProfileOpen(!profileOpen)}
                 title={fullName || "Account menu"}
                 aria-label="Account menu"
                 aria-expanded={profileOpen}
@@ -534,20 +520,6 @@ export default function ProtectedNavbar({ currentUser }) {
                     {item.name}
                   </NavLink>
                 ))}
-
-                <NavLink
-                  to="/dashboard"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `rounded-lg px-4 py-3 transition ${
-                      isActive
-                        ? "bg-blue-900 text-yellow-400"
-                        : "text-slate-200 hover:bg-blue-900"
-                    }`
-                  }
-                >
-                  Dashboard
-                </NavLink>
 
               </div>
 

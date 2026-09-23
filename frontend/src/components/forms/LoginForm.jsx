@@ -41,7 +41,7 @@ export default function LoginForm() {
       await dispatch(loginAction(credentials));
 
       // Login successful
-      navigate("/dashboard");
+      navigate("/protected-home");
     } catch (error) {
       console.error("Login failed:", error);
     }
