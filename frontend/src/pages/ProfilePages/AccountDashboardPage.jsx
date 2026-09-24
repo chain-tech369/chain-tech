@@ -1,207 +1,508 @@
 import { useEffect } from "react";
-import { useLoaderData } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 
-import Form from "../../components/uis/Form";
-import Input from "../../components/uis/Input";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
 
-import { fetchProfile } from "../../actions/profileActions";
+import { NavLink } from "react-router-dom";
+
+import UserAvatar from "../../components/uis/UserAvatar";
+
+import {
+  fetchProfile,
+} from "../../actions/profileActions";
 
 export default function AccountDashboardPage() {
-  const user = useLoaderData();
   const dispatch = useDispatch();
 
-  const profileState = useSelector((state) => state.profile);
+  // ==========================================
+  // CURRENT USER FROM REDUX
+  // ==========================================
 
-  const profile = profileState?.profile;
-  const profileLoading = profileState?.loading || false;
+  const currentUser = useSelector(
+    (state) => state.user.currentUser
+  );
+
+  // ==========================================
+  // PROFILE FROM REDUX
+  // ==========================================
+
+  const {
+    profile,
+    loading: profileLoading,
+    error: profileError,
+  } = useSelector(
+    (state) => state.profile
+  );
+
+  // ==========================================
+  // FETCH PROFILE
+  // ==========================================
 
   useEffect(() => {
-    if (user?.id) {
-      dispatch(fetchProfile(user.id));
+    if (currentUser?.id) {
+      dispatch(
+        fetchProfile(
+          currentUser.id
+        )
+      );
     }
-  }, [user?.id, dispatch]);
+  }, [
+    currentUser?.id,
+    dispatch,
+  ]);
+
+  // ==========================================
+  // USER INFORMATION
+  // ==========================================
+
+  const firstName =
+    currentUser?.first_name || "";
+
+  const lastName =
+    currentUser?.last_name || "";
+
+  const fullName =
+    `${firstName} ${lastName}`.trim() ||
+    "User";
+
+  const email =
+    currentUser?.email ||
+    "Not provided";
+
+  const userId =
+    currentUser?.id ||
+    "Not provided";
+
+  const role =
+    currentUser?.role?.name ||
+    currentUser?.role ||
+    "User";
+
+  const isActive =
+    currentUser?.is_active;
+
+  // ==========================================
+  // PAGE
+  // ==========================================
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10">
+    <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
+
       <div className="mx-auto w-full max-w-6xl">
 
-        {/* Page Header */}
-        <div className="mb-8">
-          <p className="text-sm font-semibold uppercase tracking-widest text-yellow-500">
-            My Account
-          </p>
+        {/* =====================================
+            PAGE HEADER
+        ====================================== */}
 
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-blue-950">
-            Account Dashboard
-          </h1>
+        <header className="mb-8">
 
-          <p className="mt-2 text-slate-600">
-            View your account and profile information.
-          </p>
-        </div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-        <Form>
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div>
 
-            {/* =====================================
-                USER INFORMATION
-            ====================================== */}
-            <section>
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-blue-950">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-yellow-600">
+                My Account
+              </p>
+
+              <h1 className="mt-2 text-3xl font-bold tracking-tight text-blue-950 sm:text-4xl">
+                Account Dashboard
+              </h1>
+
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
+                Manage and review your Chain-Tech account
+                information and personal profile.
+              </p>
+
+            </div>
+
+            {/* =================================
+                BACK TO HOME
+            ================================== */}
+
+            <NavLink
+              to="/protected-home"
+              className="inline-flex items-center justify-center rounded-xl bg-blue-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-900"
+            >
+              Back to Home
+            </NavLink>
+
+          </div>
+
+        </header>
+
+        {/* =====================================
+            PROFILE HEADER
+        ====================================== */}
+
+        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+
+          {/* BLUE BANNER */}
+
+          <div className="h-28 bg-blue-950 sm:h-36" />
+
+          {/* PROFILE INFORMATION */}
+
+          <div className="px-6 pb-7 sm:px-8 sm:pb-8">
+
+            <div className="-mt-12 flex flex-col gap-5 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
+
+              <div className="flex items-end gap-4">
+
+                <UserAvatar
+                  currentUser={{
+                    ...currentUser,
+                    profile_image:
+                      profile?.profile_image,
+                  }}
+                  size="h-24 w-24 sm:h-28 sm:w-28"
+                />
+
+                <div className="pb-1">
+
+                  <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
+                    {fullName}
+                  </h2>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    {email}
+                  </p>
+
+                </div>
+
+              </div>
+
+              {/* ACCOUNT STATUS */}
+
+              <div className="pb-1">
+
+                <span
+                  className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${
+                    isActive
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-red-50 text-red-700"
+                  }`}
+                >
+
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      isActive
+                        ? "bg-emerald-500"
+                        : "bg-red-500"
+                    }`}
+                  />
+
+                  {isActive
+                    ? "Active Account"
+                    : "Inactive Account"}
+
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* =====================================
+            USER INFORMATION
+        ====================================== */}
+
+        <section className="mt-6 rounded-3xl border border-slate-200 bg-white shadow-sm">
+
+          <div className="border-b border-slate-200 px-6 py-5 sm:px-8">
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <h2 className="text-lg font-bold text-slate-900">
                   User Information
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  Your account information.
+                  Basic information associated with your account.
                 </p>
-              </div>
-
-              {/* User Avatar + Name */}
-              <div className="mb-8 flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-lg font-semibold text-slate-700">
-                  {user?.first_name?.charAt(0)?.toUpperCase() || "U"}
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900">
-                    {user?.first_name || ""}{" "}
-                    {user?.last_name || ""}
-                  </h3>
-
-                  <p className="text-sm text-slate-500">
-                    {user?.email || ""}
-                  </p>
-                </div>
-              </div>
-
-              {/* User Information Grid */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-
-                <Input
-                  label="First Name"
-                  name="first_name"
-                  type="text"
-                  value={user?.first_name || ""}
-                  readOnly
-                />
-
-                <Input
-                  label="Last Name"
-                  name="last_name"
-                  type="text"
-                  value={user?.last_name || ""}
-                  readOnly
-                />
-
-                <Input
-                  label="Email Address"
-                  name="email"
-                  type="email"
-                  value={user?.email || ""}
-                  readOnly
-                />
-
-                <Input
-                  label="User ID"
-                  name="id"
-                  type="text"
-                  value={user?.id || ""}
-                  readOnly
-                />
-
-                <Input
-                  label="Role"
-                  name="role"
-                  type="text"
-                  value={user?.role?.name || user?.role || ""}
-                  readOnly
-                />
 
               </div>
-            </section>
 
-            {/* =====================================
-                HORIZONTAL SEPARATOR
-            ====================================== */}
-            <div className="my-10 border-t border-slate-200" />
+              <div className="hidden h-10 w-10 items-center justify-center rounded-xl bg-blue-50 sm:flex">
 
-            {/* =====================================
-                PROFILE INFORMATION
-            ====================================== */}
-            <section>
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-blue-950">
-                  Profile Information
-                </h2>
+                <span className="font-bold text-blue-950">
+                  U
+                </span>
 
-                <p className="mt-1 text-sm text-slate-500">
-                  Your personal profile information.
-                </p>
               </div>
 
-              {profileLoading ? (
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
-                  <p className="text-sm text-slate-500">
-                    Loading profile information...
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-
-                  {/* Phone */}
-                  <div>
-                    <p className="mb-2 text-sm font-medium text-slate-700">
-                      Phone Number
-                    </p>
-
-                    <div className="rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900">
-                      {profile?.phone || "Not provided"}
-                    </div>
-                  </div>
-
-                  {/* Address */}
-                  <div>
-                    <p className="mb-2 text-sm font-medium text-slate-700">
-                      Address
-                    </p>
-
-                    <div className="rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900">
-                      {profile?.address || "Not provided"}
-                    </div>
-                  </div>
-
-                  {/* Profile Image */}
-                  <div className="md:col-span-2">
-                    <p className="mb-2 text-sm font-medium text-slate-700">
-                      Profile Image
-                    </p>
-
-                    <div className="break-all rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900">
-                      {profile?.profile_image || "Not provided"}
-                    </div>
-                  </div>
-
-                  {/* Bio */}
-                  <div className="md:col-span-2">
-                    <p className="mb-2 text-sm font-medium text-slate-700">
-                      Bio
-                    </p>
-
-                    <div className="min-h-[120px] whitespace-pre-wrap rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-900">
-                      {profile?.bio || "No bio provided."}
-                    </div>
-                  </div>
-
-                </div>
-              )}
-            </section>
+            </div>
 
           </div>
-        </Form>
+
+          <div className="grid gap-px bg-slate-200 sm:grid-cols-2">
+
+            <InfoCard
+              label="First Name"
+              value={firstName}
+            />
+
+            <InfoCard
+              label="Last Name"
+              value={lastName}
+            />
+
+            <InfoCard
+              label="Email Address"
+              value={email}
+            />
+
+            <InfoCard
+              label="User ID"
+              value={userId}
+              mono
+            />
+
+            <InfoCard
+              label="Role"
+              value={role}
+            />
+
+            <InfoCard
+              label="Account Status"
+              value={
+                isActive
+                  ? "Active"
+                  : "Inactive"
+              }
+            />
+
+          </div>
+
+        </section>
+
+        {/* =====================================
+            PROFILE INFORMATION
+        ====================================== */}
+
+        <section className="mt-6 rounded-3xl border border-slate-200 bg-white shadow-sm">
+
+          <div className="border-b border-slate-200 px-6 py-5 sm:px-8">
+
+            <h2 className="text-lg font-bold text-slate-900">
+              Profile Information
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Your personal information and profile details.
+            </p>
+
+          </div>
+
+          {/* PROFILE LOADING */}
+
+          {profileLoading && (
+            <div className="flex items-center justify-center px-6 py-12">
+
+              <div className="text-center">
+
+                <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-950" />
+
+                <p className="mt-4 text-sm font-medium text-slate-500">
+                  Loading profile...
+                </p>
+
+              </div>
+
+            </div>
+          )}
+
+          {/* PROFILE ERROR */}
+
+          {!profileLoading &&
+            profileError && (
+              <div className="px-6 py-8 sm:px-8">
+
+                <div className="rounded-2xl border border-red-200 bg-red-50 p-5">
+
+                  <h3 className="font-semibold text-red-800">
+                    Unable to load profile
+                  </h3>
+
+                  <p className="mt-1 text-sm leading-6 text-red-600">
+                    {profileError}
+                  </p>
+
+                </div>
+
+              </div>
+            )}
+
+          {/* PROFILE DATA */}
+
+          {!profileLoading &&
+            !profileError && (
+              <div className="grid gap-px bg-slate-200 sm:grid-cols-2">
+
+                <InfoCard
+                  label="Phone Number"
+                  value={profile?.phone}
+                />
+
+                <InfoCard
+                  label="Address"
+                  value={profile?.address}
+                />
+
+                {/* PROFILE IMAGE */}
+
+                <div className="bg-white px-6 py-5 sm:px-8">
+
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    Profile Image
+                  </p>
+
+                  {profile?.profile_image ? (
+                    <div className="mt-3 flex items-center gap-4">
+
+                      <img
+                        src={profile.profile_image}
+                        alt={`${fullName} profile`}
+                        className="h-14 w-14 rounded-xl object-cover ring-2 ring-slate-100"
+                      />
+
+                      <p className="max-w-xs break-all text-xs text-slate-500">
+                        {profile.profile_image}
+                      </p>
+
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm font-medium text-slate-400">
+                      Not provided
+                    </p>
+                  )}
+
+                </div>
+
+                {/* BIOGRAPHY */}
+
+                <div className="bg-white px-6 py-5 sm:col-span-2 sm:px-8">
+
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    Biography
+                  </p>
+
+                  <div className="mt-3 rounded-2xl bg-slate-50 p-5">
+
+                    <p className="whitespace-pre-wrap text-sm leading-7 text-slate-600">
+                      {profile?.bio ||
+                        "No biography has been provided yet."}
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+            )}
+
+        </section>
+
+        {/* =====================================
+            STATISTICS
+        ====================================== */}
+
+        <section className="mt-6 grid gap-4 sm:grid-cols-3">
+
+          <StatCard
+            label="Account"
+            value={
+              isActive
+                ? "Active"
+                : "Inactive"
+            }
+            description="Current account status"
+          />
+
+          <StatCard
+            label="Role"
+            value={role}
+            description="Assigned account role"
+          />
+
+          <StatCard
+            label="Profile"
+            value={
+              profile
+                ? "Complete"
+                : "Pending"
+            }
+            description="Profile information"
+          />
+
+        </section>
 
       </div>
+
     </main>
+  );
+}
+
+// ==========================================
+// INFO CARD
+// ==========================================
+
+function InfoCard({
+  label,
+  value,
+  mono = false,
+}) {
+  return (
+    <div className="bg-white px-6 py-5 sm:px-8">
+
+      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        {label}
+      </p>
+
+      <p
+        className={`mt-2 break-words font-semibold text-slate-900 ${
+          mono
+            ? "font-mono text-xs"
+            : "text-sm sm:text-base"
+        }`}
+      >
+        {value || "Not provided"}
+      </p>
+
+    </div>
+  );
+}
+
+// ==========================================
+// STAT CARD
+// ==========================================
+
+function StatCard({
+  label,
+  value,
+  description,
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        {label}
+      </p>
+
+      <p className="mt-2 text-lg font-bold text-blue-950">
+        {value}
+      </p>
+
+      <p className="mt-1 text-xs text-slate-500">
+        {description}
+      </p>
+
+    </div>
   );
 }

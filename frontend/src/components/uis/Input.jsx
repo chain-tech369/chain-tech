@@ -1,4 +1,5 @@
 export default function Input({
+  id,
   label,
   name,
   type = "text",
@@ -9,13 +10,14 @@ export default function Input({
   required = false,
   disabled = false,
   className = "",
+  autoComplete,
   ...props
 }) {
   return (
     <div className="w-full">
       {label && (
         <label
-          htmlFor={name}
+          htmlFor={id || name}
           className="mb-2 block text-sm font-medium text-gray-700"
         >
           {label}
@@ -27,13 +29,14 @@ export default function Input({
       )}
 
       <input
-        id={name}
+        id={id || name}
         name={name}
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         disabled={disabled}
+        autoComplete={autoComplete}
         className={`
           w-full rounded-lg border px-4 py-2.5
           text-gray-900

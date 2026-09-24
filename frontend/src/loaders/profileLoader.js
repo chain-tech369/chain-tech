@@ -1,42 +1,50 @@
-import { getCurrentUser } from "../apis/userApi";
 import { getProfile } from "../apis/profileApi";
 
 // ==========================================
 // PROFILE LOADER
-// Loads the profile for the currently logged-in user
+// Loads profile for a specific user
 // ==========================================
-export const profileLoader = async () => {
+export const profileLoader = async ({ params }) => {
   try {
-    // Get currently logged-in user
-    const user = await getCurrentUser();
+    const userId = params.userId;
 
-    console.log("CURRENT USER:", user);
+    console.log("USER ID:", userId);
 
-    if (!user?.id) {
-      throw new Error("User information is not available.");
+    if (!userId) {
+      throw new Error("User ID is required.");
     }
 
-    // Get profile using the current user's ID
-    const profile = await getProfile(user.id);
+    // Get profile using user ID
+    const profile = await getProfile(userId);
 
-    console.log("CURRENT PROFILE:", profile);
+    console.log("PROFILE:", profile);
 
-    // Send both user and profile to the page
-    return {
-      user,
-      profile,
-    };
+    return profile;
   } catch (error) {
-    console.error("Failed to load profile:", error);
-    console.error("RESPONSE:", error.response?.data);
-    console.error("STATUS:", error.response?.status);
+    console.error("================================");
+    console.error("PROFILE LOADER ERROR:", error);
+    console.error(
+      "RESPONSE:",
+      error.response?.data
+    );
+    console.error(
+      "STATUS:",
+      error.response?.status
+    );
+    console.error("================================");
 
-    throw new Response("Failed to load profile", {
-      status: error.response?.status || 500,
-      statusText:
-        error.response?.data?.detail ||
+    throw new Response(
+      error.response?.data?.detail ||
         error.message ||
         "Failed to load profile",
-    });
+      {
+        status:
+          error.response?.status || 500,
+        statusText:
+          error.response?.data?.detail ||
+          error.message ||
+          "Failed to load profile",
+      }
+    );
   }
 };

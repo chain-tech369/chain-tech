@@ -439,14 +439,6 @@ export default function ProtectedNavbar({ currentUser }) {
                     </NavLink>
 
                     <NavLink
-                      to="/profile"
-                      onClick={closeProfile}
-                      className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-900"
-                    >
-                      Profile
-                    </NavLink>
-
-                    <NavLink
                       to="/account/edit"
                       onClick={closeProfile}
                       className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-blue-900"

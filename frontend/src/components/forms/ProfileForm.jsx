@@ -1,23 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Form from "../uis/Form";
 import Input from "../uis/Input";
 import Button from "../uis/Button";
 
-export default function ProfileForm({ profile, onSave, onCancel }) {
+export default function ProfileForm({
+  profile,
+  onSave,
+  onCancel,
+  updating = false,
+  error = null,
+}) {
   const [formData, setFormData] = useState({
-    phone: profile?.phone || "",
-    profile_image: profile?.profile_image || "",
-    bio: profile?.bio || "",
-    address: profile?.address || "",
+    phone: "",
+    profile_image: "",
+    bio: "",
+    address: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  // ==========================================
+  // LOAD PROFILE INTO FORM
+  // ==========================================
+
+  useEffect(() => {
+    setFormData({
+      phone: profile?.phone || "",
+      profile_image: profile?.profile_image || "",
+      bio: profile?.bio || "",
+      address: profile?.address || "",
+    });
+  }, [profile]);
 
   // ==========================================
   // HANDLE INPUT CHANGE
   // ==========================================
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -30,25 +47,16 @@ export default function ProfileForm({ profile, onSave, onCancel }) {
   // ==========================================
   // HANDLE FORM SUBMIT
   // ==========================================
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setError("");
-    setLoading(true);
-
-    try {
-      // Send the profile data to the parent component.
-      await onSave(formData);
-    } catch (err) {
-      setError(
-        err?.response?.data?.detail ||
-          err?.message ||
-          "Failed to update profile."
-      );
-    } finally {
-      setLoading(false);
-    }
+    await onSave(formData);
   };
+
+  // ==========================================
+  // PAGE
+  // ==========================================
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -57,6 +65,7 @@ export default function ProfileForm({ profile, onSave, onCancel }) {
         {/* ==========================================
             PHONE
         ========================================== */}
+
         <Input
           label="Phone Number"
           name="phone"
@@ -69,6 +78,7 @@ export default function ProfileForm({ profile, onSave, onCancel }) {
         {/* ==========================================
             PROFILE IMAGE
         ========================================== */}
+
         <Input
           label="Profile Image URL"
           name="profile_image"
@@ -81,6 +91,7 @@ export default function ProfileForm({ profile, onSave, onCancel }) {
         {/* ==========================================
             ADDRESS
         ========================================== */}
+
         <Input
           label="Address"
           name="address"
@@ -93,6 +104,7 @@ export default function ProfileForm({ profile, onSave, onCancel }) {
         {/* ==========================================
             BIO
         ========================================== */}
+
         <div>
           <label
             htmlFor="bio"
@@ -115,6 +127,7 @@ export default function ProfileForm({ profile, onSave, onCancel }) {
         {/* ==========================================
             ERROR
         ========================================== */}
+
         {error && (
           <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
             {error}
@@ -124,23 +137,28 @@ export default function ProfileForm({ profile, onSave, onCancel }) {
         {/* ==========================================
             BUTTONS
         ========================================== */}
+
         <div className="flex flex-col gap-3 sm:flex-row">
+
           <Button
             type="submit"
-            disabled={loading}
+            disabled={updating}
             className="w-full sm:w-auto"
           >
-            {loading ? "Saving..." : "Save Changes"}
+            {updating
+              ? "Saving..."
+              : "Save Changes"}
           </Button>
 
           <Button
             type="button"
             onClick={onCancel}
-            disabled={loading}
+            disabled={updating}
             className="w-full bg-slate-200 text-slate-800 hover:bg-slate-300 sm:w-auto"
           >
             Cancel
           </Button>
+
         </div>
       </div>
     </Form>

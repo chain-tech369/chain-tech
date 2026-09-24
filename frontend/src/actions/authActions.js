@@ -20,7 +20,7 @@ import {
   clearCurrentUser,
 } from "../app/userSlice";
 
-import { fetchCurrentUserRedux } from "./userReduxActions";
+import { fetchCurrentUser } from "./CurrentUserActions";
 
 // =========================
 // REGISTER
@@ -63,9 +63,9 @@ export const loginAction =
       // 2. Save access token
       dispatch(loginSuccess(data));
 
-      // 3. Get current logged-in user
+      // 3. Fetch current logged-in user
       const currentUser = await dispatch(
-        fetchCurrentUserRedux()
+        fetchCurrentUser()
       );
 
       return {
@@ -98,7 +98,7 @@ export const logoutAction =
       // 1. Clear authentication
       dispatch(logoutSuccess());
 
-      // 2. Clear the previous user's information
+      // 2. Clear current user
       dispatch(clearCurrentUser());
 
       return data;

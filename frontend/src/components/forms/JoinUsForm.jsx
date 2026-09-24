@@ -9,6 +9,7 @@ export default function JoinUsForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     role: "",
     skills: "",
     experience: "",
@@ -59,6 +60,7 @@ export default function JoinUsForm() {
       setFormData({
         name: "",
         email: "",
+        phone: "",
         role: "",
         skills: "",
         experience: "",
@@ -82,7 +84,7 @@ export default function JoinUsForm() {
       onSubmit={handleSubmit}
       className="space-y-6"
     >
-      {/* ================= NAME + EMAIL ================= */}
+      {/* ================= NAME + EMAIL + PHONE ================= */}
 
       <div className="grid gap-6 md:grid-cols-2">
 
@@ -104,6 +106,17 @@ export default function JoinUsForm() {
           type="email"
           placeholder="you@example.com"
           value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        <Input
+          id="phone"
+          name="phone"
+          label="Phone Number"
+          type="tel"
+          placeholder="+254 700 000 000"
+          value={formData.phone}
           onChange={handleChange}
           required
         />

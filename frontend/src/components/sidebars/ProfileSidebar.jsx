@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
+import UserAvatar from "../uis/UserAvatar";
+
 export default function ProfileSidebar({ currentUser }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Get the logged-in user's first name
-  const firstName = currentUser?.first_name || "";
-
-  // Get the first letter dynamically
-  const initial = firstName.charAt(0).toUpperCase();
 
   // Get full name dynamically
   const fullName =
     `${currentUser?.first_name || ""} ${
       currentUser?.last_name || ""
-    }`.trim();
+    }`.trim() || "User";
 
   const navItems = [
     {
@@ -41,7 +37,9 @@ export default function ProfileSidebar({ currentUser }) {
 
   return (
     <>
-      {/* Mobile toggle */}
+      {/* ==========================================
+          MOBILE TOGGLE
+      ========================================== */}
       <button
         type="button"
         onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -55,7 +53,9 @@ export default function ProfileSidebar({ currentUser }) {
         {sidebarOpen ? "×" : "☰"}
       </button>
 
-      {/* Mobile backdrop */}
+      {/* ==========================================
+          MOBILE BACKDROP
+      ========================================== */}
       {sidebarOpen && (
         <button
           type="button"
@@ -65,7 +65,9 @@ export default function ProfileSidebar({ currentUser }) {
         />
       )}
 
-      {/* Sidebar */}
+      {/* ==========================================
+          SIDEBAR
+      ========================================== */}
       <aside
         className={`
           fixed inset-y-0 left-0 z-50
@@ -81,7 +83,9 @@ export default function ProfileSidebar({ currentUser }) {
           lg:translate-x-0
         `}
       >
-        {/* Header */}
+        {/* ========================================
+            HEADER
+        ======================================== */}
         <div className="flex h-20 shrink-0 items-center border-b border-blue-900 px-6">
           <div>
             <h1 className="text-xl font-black text-white">
@@ -97,7 +101,9 @@ export default function ProfileSidebar({ currentUser }) {
           </div>
         </div>
 
-        {/* Navigation */}
+        {/* ========================================
+            NAVIGATION
+        ======================================== */}
         <nav className="flex-1 overflow-y-auto px-4 py-6">
           <p className="mb-3 px-3 text-xs font-bold uppercase tracking-widest text-blue-400">
             Account
@@ -124,7 +130,9 @@ export default function ProfileSidebar({ currentUser }) {
             </NavLink>
           ))}
 
-          {/* Logout */}
+          {/* ======================================
+              LOGOUT
+          ====================================== */}
           <div className="mt-8 border-t border-blue-900 pt-6">
             <NavLink
               to="/logout"
@@ -140,32 +148,25 @@ export default function ProfileSidebar({ currentUser }) {
           </div>
         </nav>
 
-        {/* Current user */}
+        {/* ========================================
+            CURRENT USER
+        ======================================== */}
         <div className="shrink-0 border-t border-blue-900 p-4">
           <div className="flex items-center gap-3">
 
-            {/* Dynamic avatar */}
+            {/* Avatar */}
             <NavLink
               to="/current-user"
               onClick={() => setSidebarOpen(false)}
-              className="flex h-10 w-10 shrink-0
-                         items-center justify-center
-                         rounded-full
-                         bg-yellow-400
-                         font-bold
-                         text-slate-950
-                         transition
-                         hover:ring-2
-                         hover:ring-yellow-400
-                         hover:ring-offset-2
-                         hover:ring-offset-blue-950"
+              className="shrink-0 rounded-full"
             >
-              <span className="text-base font-bold">
-                {initial}
-              </span>
+              <UserAvatar
+                currentUser={currentUser}
+                size="h-10 w-10"
+              />
             </NavLink>
 
-            {/* Dynamic name */}
+            {/* User name */}
             <div className="min-w-0">
               <NavLink
                 to="/current-user"

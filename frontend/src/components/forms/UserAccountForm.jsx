@@ -8,16 +8,15 @@ export default function UserAccountForm({
   user,
   onSave,
   onCancel,
+  updating = false,
+  error = null,
 }) {
   const [formData, setFormData] = useState({
-    first_name: user?.first_name || "",
-    last_name: user?.last_name || "",
-    email: user?.email || "",
+    first_name: "",
+    last_name: "",
+    email: "",
     password: "",
   });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   // ==========================================
   // UPDATE FORM WHEN USER CHANGES
@@ -56,37 +55,26 @@ export default function UserAccountForm({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setError("");
-    setLoading(true);
+    const dataToSend = {
+      first_name: formData.first_name.trim(),
+      last_name: formData.last_name.trim(),
+      email: formData.email.trim(),
+    };
 
-    try {
-      const dataToSend = {
-        first_name: formData.first_name.trim(),
-        last_name: formData.last_name.trim(),
-        email: formData.email.trim(),
-      };
-
-      // Only send password when user entered one
-      if (formData.password.trim() !== "") {
-        dataToSend.password = formData.password;
-      }
-
-      await onSave(dataToSend);
-
-    } catch (err) {
-      setError(
-        err?.response?.data?.detail ||
-          err?.message ||
-          "Failed to update account."
-      );
-    } finally {
-      setLoading(false);
+    // Only send password when entered
+    if (formData.password.trim() !== "") {
+      dataToSend.password = formData.password;
     }
+
+    await onSave(dataToSend);
   };
+
+  // ==========================================
+  // FORM
+  // ==========================================
 
   return (
     <Form onSubmit={handleSubmit}>
-
       <div className="space-y-6">
 
         {/* ========================================
@@ -167,27 +155,23 @@ export default function UserAccountForm({
 
           <Button
             type="submit"
-            disabled={loading}
+            disabled={updating}
             className="w-full sm:w-auto"
           >
-            {loading
-              ? "Saving..."
-              : "Save Changes"}
+            {updating ? "Saving..." : "Save Changes"}
           </Button>
 
           <Button
             type="button"
             onClick={onCancel}
-            disabled={loading}
+            disabled={updating}
             className="w-full bg-slate-200 text-slate-800 hover:bg-slate-300 sm:w-auto"
           >
             Cancel
           </Button>
 
         </div>
-
       </div>
-
     </Form>
   );
 }
