@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.dependencies.get_db import get_db
-from app.profile.profile_schema import (
+from app.protected_folders.profile.profile_schema import (
     ProfileCreate,
     ProfileResponse,
     ProfileUpdate,
 )
-from app.profile.profile_service import ProfileService
+from app.protected_folders.profile.profile_service import ProfileService
 
 
 router = APIRouter(

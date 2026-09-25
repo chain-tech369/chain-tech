@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.user.user_models import User
 from app.user.user_schemas import UserCreate, UserUpdate
-from app.profile.profile_model import Profile
+from app.protected_folders.profile.profile_model import Profile
 
 
 class UserRepository:

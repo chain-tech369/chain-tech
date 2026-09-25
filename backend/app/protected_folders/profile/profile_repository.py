@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.profile.profile_model import Profile
-from app.profile.profile_schema import ProfileCreate, ProfileUpdate
+from app.protected_folders.profile.profile_model import Profile
+from app.protected_folders.profile.profile_schema import ProfileCreate, ProfileUpdate
 
 
 class ProfileRepository:

@@ -1,3 +1,6 @@
+# =============================
+# import file packages here
+# =============================
 from fastapi import (
     Depends,
     HTTPException,
@@ -9,6 +12,9 @@ from fastapi.security import (
 )
 from sqlalchemy.orm import Session
 
+# ==============================================
+# import get_current_user file dependencies here
+# ==============================================
 from app.core.security import decode_access_token
 from app.dependencies.get_db import get_db
 from app.user.user_models import User

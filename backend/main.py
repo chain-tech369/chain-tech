@@ -1,11 +1,21 @@
+# =======================================
+# import fastapi models and packages here
+# =======================================
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+#======================================
+# import others dependencies files here
+# =====================================
 from app.db import base
 
+#=========================
+# import routes files here
+#=========================
 from app.auth.auth_routes import router as auth_router
 from app.user.user_routes import router as user_router
-from app.profile.profile_route import router as profile_router
+from app.protected_folders.profile.profile_route import router as profile_router
+from app.admin_folders.experience_level.experience_route import router as experience_router
 
 
 app = FastAPI(
@@ -36,6 +46,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(profile_router)
+app.include_router(experience_router)
 
 
 # ========================================

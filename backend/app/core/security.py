@@ -1,9 +1,14 @@
+# =============================
+# import file packages here
+# =============================
 from datetime import datetime, timedelta, timezone
-
 import jwt
 from argon2 import PasswordHasher
 from argon2.exceptions import VerificationError
 
+# ======================================
+# import security file dependencies here
+# ======================================
 from app.core.settings import settings
 
 

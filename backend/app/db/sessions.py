@@ -1,6 +1,12 @@
+# =============================
+# import file packages here
+# =============================
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+# =================================
+# import sessions file dependencies
+# =================================
 from app.core.settings import settings
 
 
