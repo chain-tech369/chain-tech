@@ -15,19 +15,33 @@ from app.db.base_class import Base
 
 
 if TYPE_CHECKING:
-    from app.admin_folders.professional_role.professional_model import ProfessionalRole
-    from app.admin_folders.experience_level.experience_model import Experience
-    from app.admin_folders.skills.skills_model import Skill
+    from app.admin_folders.professional_role.professional_model import (
+        ProfessionalRole,
+    )
+    from app.admin_folders.experience_level.experience_model import (
+        Experience,
+    )
+    from app.admin_folders.skills.skills_model import (
+        Skill,
+    )
 
 
 class JoinUsApplication(Base):
     __tablename__ = "join_applications"
+
+    # =========================
+    # PRIMARY KEY
+    # =========================
 
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         index=True,
     )
+
+    # =========================
+    # APPLICANT INFORMATION
+    # =========================
 
     name: Mapped[str] = mapped_column(
         String(150),
@@ -110,6 +124,17 @@ class JoinUsApplication(Base):
         Boolean,
         nullable=False,
         default=False,
+    )
+
+    # =========================
+    # APPLICATION STATUS
+    # =========================
+
+    status: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+        default="pending",
+        index=True,
     )
 
     # =========================

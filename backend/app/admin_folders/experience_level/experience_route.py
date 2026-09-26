@@ -11,7 +11,7 @@ from app.admin_folders.experience_level.experience_service import ExperienceServ
 
 
 router = APIRouter(
-    prefix="/experiences",
+    prefix="/admin/experiences",
     tags=["Experiences"],
 )
 
