@@ -12,7 +12,9 @@ export default function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector(
+    (state) => state.auth
+  );
 
   const [formData, setFormData] = useState({
     email: "",
@@ -21,11 +23,19 @@ export default function LoginForm() {
   });
 
   const handleChange = (event) => {
-    const { name, value, type, checked } = event.target;
+    const {
+      name,
+      value,
+      type,
+      checked,
+    } = event.target;
 
     setFormData((previous) => ({
       ...previous,
-      [name]: type === "checkbox" ? checked : value,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : value,
     }));
   };
 
@@ -36,20 +46,28 @@ export default function LoginForm() {
       const credentials = {
         email: formData.email,
         password: formData.password,
+        remember: formData.remember,
       };
 
-      await dispatch(loginAction(credentials));
+      await dispatch(
+        loginAction(credentials)
+      );
 
       // Login successful
       navigate("/protected-home");
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error(
+        "Login failed:",
+        error
+      );
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="space-y-5">
-
+    <Form
+      onSubmit={handleSubmit}
+      className="space-y-5"
+    >
       {/* Email */}
       <Input
         id="email"
@@ -99,7 +117,7 @@ export default function LoginForm() {
         </div>
       )}
 
-      {/* Remember me */}
+      {/* Remember Me */}
       <label className="flex items-center gap-2 text-sm text-slate-600">
         <input
           type="checkbox"
@@ -118,9 +136,10 @@ export default function LoginForm() {
         disabled={loading}
         className="disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {loading ? "Logging in..." : "Login"}
+        {loading
+          ? "Logging in..."
+          : "Login"}
       </Button>
-
     </Form>
   );
 }

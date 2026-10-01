@@ -8,32 +8,16 @@ export default function UserAvatar({
   const fullName =
     `${firstName} ${lastName}`.trim() || "User";
 
-  const firstInitial = firstName
-    .charAt(0)
-    .toUpperCase();
-
-  const lastInitial = lastName
-    .charAt(0)
-    .toUpperCase();
-
-  const initials = `${firstInitial}${lastInitial}` || "U";
+  const initials =
+    `${firstName.charAt(0)}${lastName.charAt(0)}`
+      .toUpperCase() || "U";
 
   return (
     <div
-      className={`${size} overflow-hidden rounded-full bg-yellow-400`}
+      className={`${size} flex items-center justify-center rounded-full bg-yellow-400 font-semibold text-slate-950`}
       title={fullName}
     >
-      {currentUser?.profile_image ? (
-        <img
-          src={currentUser.profile_image}
-          alt={`${fullName} profile`}
-          className="h-full w-full object-cover"
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center font-semibold text-slate-950">
-          {initials}
-        </div>
-      )}
+      {initials}
     </div>
   );
 }

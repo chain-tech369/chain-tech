@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 
 from app.auth.auth_schema import RegisterRequest
-from app.core.security import (
+from app.auth.security import (
     create_access_token,
+    create_refresh_token,
     hash_password,
     verify_password,
 )
@@ -33,14 +34,24 @@ class AuthService:
 
         return user
 
-    def login(self, email: str, password: str):
+    def login(
+        self,
+        email: str,
+        password: str,
+        remember: bool = False,
+    ):
+
         user = self.user_repository.get_by_email(email)
 
         if not user:
-            raise ValueError("Invalid email or password")
+            raise ValueError(
+                "Invalid email or password"
+            )
 
         if not user.is_active:
-            raise ValueError("User account is inactive")
+            raise ValueError(
+                "User account is inactive"
+            )
 
         password_valid = verify_password(
             password,
@@ -48,11 +59,21 @@ class AuthService:
         )
 
         if not password_valid:
-            raise ValueError("Invalid email or password")
+            raise ValueError(
+                "Invalid email or password"
+            )
 
-        access_token = create_access_token(user.id)
+        access_token = create_access_token(
+            user.id
+        )
+
+        refresh_token = create_refresh_token(
+            user.id,
+            remember=remember,
+        )
 
         return {
             "access_token": access_token,
+            "refresh_token": refresh_token,
             "token_type": "bearer",
         }

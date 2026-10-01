@@ -55,6 +55,35 @@ export default function ProtectedNavbar({ currentUser }) {
     setMenuOpen(false);
   };
 
+  // =====================================================
+  // CHAIN-TECH LOGO
+  // =====================================================
+
+  const Logo = ({ mobile = false }) => (
+    <div className="flex items-center gap-3">
+      <div
+        className={`flex ${
+          mobile ? "h-10 w-10" : "h-10 w-10"
+        } items-center justify-center rounded-xl bg-yellow-400 font-black text-sm text-blue-950 shadow-lg`}
+      >
+        CT
+      </div>
+
+      <div>
+        <span className="block text-lg font-black tracking-wide text-white">
+          CHAIN
+          <span className="text-yellow-400">
+            -TECH
+          </span>
+        </span>
+
+        <span className="block text-[10px] tracking-widest text-blue-300">
+          DIGITAL TECHNOLOGY
+        </span>
+      </div>
+    </div>
+  );
+
   return (
     <header className="sticky top-0 z-50 border-b border-blue-900/40 bg-blue-950/95 backdrop-blur-xl">
 
@@ -68,26 +97,9 @@ export default function ProtectedNavbar({ currentUser }) {
 
         <NavLink
           to="/protected-home"
-          className="flex items-center gap-3"
+          className="flex items-center"
         >
-          <img
-            src="https://res.cloudinary.com/dtz0urit6/image/upload/f_auto,q_auto/cloudinary-tools-uploads/wf7fm0ktdkg7czzauwo4"
-            alt="Chain-Tech Logo"
-            className="h-10 w-10 object-contain"
-          />
-
-          <div>
-            <span className="block text-lg font-black tracking-wide text-white">
-              CHAIN
-              <span className="text-yellow-400">
-                -TECH
-              </span>
-            </span>
-
-            <span className="hidden text-[10px] tracking-widest text-blue-300 sm:block">
-              DIGITAL TECHNOLOGY
-            </span>
-          </div>
+          <Logo />
         </NavLink>
 
         {/* CENTER NAVIGATION */}
@@ -279,30 +291,8 @@ export default function ProtectedNavbar({ currentUser }) {
           <NavLink
             to="/protected-home"
             onClick={closeMenu}
-            className="flex items-center gap-3"
           >
-
-            <img
-              src="https://res.cloudinary.com/dtz0urit6/image/upload/f_auto,q_auto/cloudinary-tools-uploads/wf7fm0ktdkg7czzauwo4"
-              alt="Chain-Tech Logo"
-              className="h-10 w-10 object-contain"
-            />
-
-            <div>
-
-              <span className="block text-lg font-black tracking-wide text-white">
-                CHAIN
-                <span className="text-yellow-400">
-                  -TECH
-                </span>
-              </span>
-
-              <span className="block text-[10px] tracking-widest text-blue-300">
-                DIGITAL TECHNOLOGY
-              </span>
-
-            </div>
-
+            <Logo mobile />
           </NavLink>
 
         </div>

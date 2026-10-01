@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.core.security import hash_password
+from app.auth.security import hash_password
 from app.user.user_repository import UserRepository
 from app.user.user_schemas import UserCreate, UserUpdate
 

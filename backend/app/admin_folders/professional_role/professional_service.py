@@ -78,8 +78,25 @@ class ProfessionalRoleService:
 
         return self.repository.update(role)
 
-    def delete(self, role_id: int) -> None:
+    def delete(self, role_id: int) -> dict:
 
         role = self.get_by_id(role_id)
 
+        # Check whether this professional role
+        # is being used by any Join Us applications.
+        if role.join_applications:
+
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "Professional role cannot be deleted "
+                    "because it is being used by existing "
+                    "join applications."
+                ),
+            )
+
         self.repository.delete(role)
+
+        return {
+            "message": "Professional role deleted successfully"
+        }

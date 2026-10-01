@@ -2,9 +2,15 @@ import {
   registerRequest,
   registerSuccess,
   registerFailure,
+
   loginRequest,
   loginSuccess,
   loginFailure,
+
+  refreshRequest,
+  refreshSuccess,
+  refreshFailure,
+
   logoutRequest,
   logoutSuccess,
   logoutFailure,
@@ -13,18 +19,15 @@ import {
 import {
   registerUser,
   loginUser,
+  refreshAccessToken,
   logoutUser,
 } from "../apis/authApi";
 
-import {
-  clearCurrentUser,
-} from "../app/userSlice";
+import { clearCurrentUser } from "../app/userSlice";
 
-import { fetchCurrentUser } from "./CurrentUserActions";
-
-// =========================
+// ==========================================
 // REGISTER
-// =========================
+// ==========================================
 
 export const registerAction =
   (userData) => async (dispatch) => {
@@ -48,30 +51,37 @@ export const registerAction =
     }
   };
 
-// =========================
+// ==========================================
 // LOGIN
-// =========================
+// ==========================================
 
 export const loginAction =
   (credentials) => async (dispatch) => {
     dispatch(loginRequest());
 
     try {
-      // 1. Login with email and password
+      /*
+       * credentials contains:
+       *
+       * {
+       *   email,
+       *   password,
+       *   remember
+       * }
+       */
+
       const data = await loginUser(credentials);
 
-      // 2. Save access token
+      /*
+       * Backend returns the access token.
+       *
+       * The refresh token is stored in an
+       * HttpOnly cookie by the backend.
+       */
+
       dispatch(loginSuccess(data));
 
-      // 3. Fetch current logged-in user
-      const currentUser = await dispatch(
-        fetchCurrentUser()
-      );
-
-      return {
-        ...data,
-        currentUser,
-      };
+      return data;
     } catch (error) {
       const message =
         error.response?.data?.detail ||
@@ -84,9 +94,45 @@ export const loginAction =
     }
   };
 
-// =========================
+// ==========================================
+// REFRESH ACCESS TOKEN
+// ==========================================
+
+export const refreshAction =
+  () => async (dispatch) => {
+    dispatch(refreshRequest());
+
+    try {
+      /*
+       * The refresh token is stored in an
+       * HttpOnly cookie.
+       *
+       * The browser automatically sends the cookie
+       * with the refresh request.
+       */
+
+      const data = await refreshAccessToken();
+
+      dispatch(refreshSuccess(data));
+
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data?.detail ||
+        error.message ||
+        "Session expired";
+
+      dispatch(refreshFailure(message));
+
+      dispatch(clearCurrentUser());
+
+      return null;
+    }
+  };
+
+// ==========================================
 // LOGOUT
-// =========================
+// ==========================================
 
 export const logoutAction =
   () => async (dispatch) => {
@@ -95,10 +141,8 @@ export const logoutAction =
     try {
       const data = await logoutUser();
 
-      // 1. Clear authentication
       dispatch(logoutSuccess());
 
-      // 2. Clear current user
       dispatch(clearCurrentUser());
 
       return data;

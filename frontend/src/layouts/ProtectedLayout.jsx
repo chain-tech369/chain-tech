@@ -3,9 +3,7 @@ import {
   Outlet,
 } from "react-router-dom";
 
-import {
-  useEffect,
-} from "react";
+import { useEffect } from "react";
 
 import {
   useDispatch,
@@ -26,10 +24,8 @@ export default function ProtectedLayout() {
   // AUTH STATE
   // ==========================================
 
-  const {
-    isAuthenticated,
-  } = useSelector(
-    (state) => state.auth
+  const isAuthenticated = useSelector(
+    (state) => state.auth.isAuthenticated
   );
 
   // ==========================================
@@ -45,7 +41,7 @@ export default function ProtectedLayout() {
   );
 
   // ==========================================
-  // RESTORE CURRENT USER AFTER REFRESH
+  // RESTORE CURRENT USER
   // ==========================================
 
   useEffect(() => {
@@ -117,25 +113,13 @@ export default function ProtectedLayout() {
   return (
     <div className="min-h-screen bg-slate-950">
 
-      {/* ======================================
-          PROTECTED NAVBAR
-      ====================================== */}
-
       <ProtectedNavbar
         currentUser={currentUser}
       />
 
-      {/* ======================================
-          PROTECTED PAGE CONTENT
-      ====================================== */}
-
       <main className="flex-1">
         <Outlet />
       </main>
-
-      {/* ======================================
-          FOOTER
-      ====================================== */}
 
       <ProtectedFooter />
 

@@ -13,6 +13,7 @@ export const registerUser = async (userData) => {
   return response.data;
 };
 
+
 // =========================
 // LOGIN USER
 // =========================
@@ -25,6 +26,20 @@ export const loginUser = async (credentials) => {
 
   return response.data;
 };
+
+
+// =========================
+// REFRESH ACCESS TOKEN
+// =========================
+
+export const refreshAccessToken = async () => {
+  const response = await api.post(
+    "/auth/refresh"
+  );
+
+  return response.data;
+};
+
 
 // =========================
 // LOGOUT USER

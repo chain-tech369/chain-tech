@@ -41,26 +41,27 @@ export const fetchCurrentUser = () => async (dispatch) => {
 // UPDATE USER
 // ==========================================
 
-export const editUser = (userId, userData) => async (dispatch) => {
-  dispatch(updateUserStart());
+export const editUser =
+  (userId, userData) => async (dispatch) => {
+    dispatch(updateUserStart());
 
-  try {
-    const updatedUser = await updateUser(
-      userId,
-      userData
-    );
+    try {
+      const updatedUser = await updateUser(
+        userId,
+        userData
+      );
 
-    dispatch(updateUserSuccess(updatedUser));
+      dispatch(updateUserSuccess(updatedUser));
 
-    return updatedUser;
-  } catch (error) {
-    const message =
-      error.response?.data?.detail ||
-      error.message ||
-      "Failed to update user.";
+      return updatedUser;
+    } catch (error) {
+      const message =
+        error.response?.data?.detail ||
+        error.message ||
+        "Failed to update user.";
 
-    dispatch(updateUserFailure(message));
+      dispatch(updateUserFailure(message));
 
-    throw error;
-  }
-};
+      throw error;
+    }
+  };

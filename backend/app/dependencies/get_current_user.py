@@ -1,21 +1,8 @@
-# =============================
-# import file packages here
-# =============================
-from fastapi import (
-    Depends,
-    HTTPException,
-    status,
-)
-from fastapi.security import (
-    HTTPAuthorizationCredentials,
-    HTTPBearer,
-)
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-# ==============================================
-# import get_current_user file dependencies here
-# ==============================================
-from app.core.security import decode_access_token
+from app.auth.security import decode_access_token
 from app.dependencies.get_db import get_db
 from app.user.user_models import User
 from app.user.user_repository import UserRepository
@@ -32,9 +19,7 @@ def get_current_user(
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
-        headers={
-            "WWW-Authenticate": "Bearer",
-        },
+        headers={"WWW-Authenticate": "Bearer"},
     )
 
     token = credentials.credentials
@@ -42,12 +27,19 @@ def get_current_user(
     try:
         payload = decode_access_token(token)
 
+        # Make sure this is an access token.
+        if payload.get("type") != "access":
+            raise credentials_exception
+
         user_id = payload.get("sub")
 
         if user_id is None:
             raise credentials_exception
 
         user_id = int(user_id)
+
+    except (ValueError, TypeError):
+        raise credentials_exception
 
     except Exception:
         raise credentials_exception
