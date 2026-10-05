@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.authorization.authorization import require_permission
 from app.dependencies.get_current_user import get_current_user
 from app.dependencies.get_db import get_db
 from app.user.user_models import User
@@ -40,15 +41,15 @@ def get_me(
 def create_user(
     user_data: UserCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("user:create")
+    ),
 ):
     service = UserService(db)
 
     try:
-        # For public registration, use your normal USER role ID.
-        # Replace 2 with the ID of your normal user role.
         user = service.create_user(
             user_data=user_data,
-            role_id=2,
         )
 
         return user
@@ -70,12 +71,13 @@ def create_user(
 )
 def get_all_users(
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("user:read")
+    ),
 ):
     service = UserService(db)
 
-    users = service.get_all_users()
-
-    return users
+    return service.get_all_users()
 
 
 # ==========================================
@@ -89,6 +91,9 @@ def get_all_users(
 def get_user(
     user_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("user:read")
+    ),
 ):
     service = UserService(db)
 
@@ -114,6 +119,9 @@ def get_user(
 def get_user_by_email(
     email: str,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("user:read")
+    ),
 ):
     service = UserService(db)
 
@@ -140,6 +148,9 @@ def update_user(
     user_id: int,
     user_data: UserUpdate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("user:update")
+    ),
 ):
     service = UserService(db)
 
@@ -169,6 +180,9 @@ def update_user(
 def delete_user(
     user_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("user:delete")
+    ),
 ):
     service = UserService(db)
 

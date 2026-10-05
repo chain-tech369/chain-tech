@@ -7,6 +7,10 @@ import joinusReducer from "./joinusSlice";
 import professionalroleReducer from "./professionalroleSlice";
 import experiencelevelReducer from "./experiencelevelSlice";
 import skillsReducer from "./skillsSlice";
+import estimatedBudgetReducer from "./estimatedbudgetSlice";
+import expectedTimelineReducer from "./expectedtimelineSlice";
+import serviceRequiredReducer from "./servicerequiredSlice";
+import serviceRequestReducer from "./servicerequestSlice";
 
 
 const store = configureStore({
@@ -18,6 +22,10 @@ const store = configureStore({
      professionalRole: professionalroleReducer,
     experienceLevel: experiencelevelReducer,
     skills: skillsReducer,
+    estimatedBudget: estimatedBudgetReducer,
+    expectedTimeline: expectedTimelineReducer,
+     serviceRequired: serviceRequiredReducer,
+     serviceRequest: serviceRequestReducer,
   },
 });
 

@@ -266,7 +266,7 @@ export default function ContactPage() {
           </p>
 
           <a
-            href="/service"
+            href="/services"
             className="mt-8 inline-block rounded-xl bg-blue-600 px-8 py-4 font-bold text-white transition hover:bg-blue-500"
           >
             Explore Our Services

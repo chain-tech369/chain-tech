@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.user.user_models import User
@@ -10,30 +11,30 @@ class UserRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_all(self):
-        return self.db.query(User).all()
-
-    def get_by_id(self, user_id: int):
-        return (
-            self.db.query(User)
-            .filter(User.id == user_id)
-            .first()
+    def get_all(self) -> list[User]:
+        result = self.db.execute(
+            select(User)
         )
+        return list(result.scalars().all())
 
-    def get_by_email(self, email: str):
-        return (
-            self.db.query(User)
-            .filter(User.email == email)
-            .first()
+    def get_by_id(self, user_id: int) -> User | None:
+        result = self.db.execute(
+            select(User).where(User.id == user_id)
         )
+        return result.scalar_one_or_none()
+
+    def get_by_email(self, email: str) -> User | None:
+        result = self.db.execute(
+            select(User).where(User.email == email)
+        )
+        return result.scalar_one_or_none()
 
     def create(
         self,
         user_data: UserCreate,
         hashed_password: str,
         role_id: int,
-    ):
-        # Create User
+    ) -> User:
         user = User(
             first_name=user_data.first_name,
             last_name=user_data.last_name,
@@ -45,7 +46,6 @@ class UserRepository:
         # Create empty Profile automatically
         user.profile = Profile()
 
-        # Save User + Profile
         self.db.add(user)
         self.db.commit()
         self.db.refresh(user)
@@ -57,7 +57,8 @@ class UserRepository:
         user: User,
         user_data: UserUpdate,
         hashed_password: str | None = None,
-    ):
+    ) -> User:
+
         if user_data.first_name is not None:
             user.first_name = user_data.first_name
 
@@ -70,6 +71,9 @@ class UserRepository:
         if user_data.is_active is not None:
             user.is_active = user_data.is_active
 
+        if user_data.role_id is not None:
+            user.role_id = user_data.role_id
+
         if hashed_password is not None:
             user.hashed_password = hashed_password
 
@@ -78,7 +82,7 @@ class UserRepository:
 
         return user
 
-    def delete(self, user: User):
+    def delete(self, user: User) -> bool:
         self.db.delete(user)
         self.db.commit()
 

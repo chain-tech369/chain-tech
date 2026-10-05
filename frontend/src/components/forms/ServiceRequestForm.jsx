@@ -1,10 +1,49 @@
 import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import Form from "../uis/Form";
 import Input from "../uis/Input";
 import Button from "../uis/Button";
 
+import {
+  createServiceRequestAction,
+} from "../../actions/servicerequestAction";
+
 export default function ServiceRequestForm() {
+  // =====================================================
+  // REDUX
+  // =====================================================
+
+  const dispatch = useDispatch();
+
+  const {
+    creating,
+    error,
+    success,
+  } = useSelector(
+    (state) => state.serviceRequest
+  );
+
+  // =====================================================
+  // LOADER DATA
+  // =====================================================
+
+  const loaderData = useLoaderData();
+
+  const estimatedBudgets =
+    loaderData?.estimatedBudgets ?? [];
+
+  const expectedTimelines =
+    loaderData?.expectedTimelines ?? [];
+
+  const serviceRequireds =
+    loaderData?.serviceRequireds ?? [];
+
+  // =====================================================
+  // FORM STATE
+  // =====================================================
+
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
@@ -19,44 +58,88 @@ export default function ServiceRequestForm() {
     terms: false,
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // =========================
+  // =====================================================
   // HANDLE INPUT CHANGES
-  // =========================
+  // =====================================================
 
   const handleChange = (event) => {
-    const { name, value, type, checked } = event.target;
+    const {
+      name,
+      value,
+      type,
+      checked,
+    } = event.target;
 
     setFormData((previous) => ({
       ...previous,
-      [name]: type === "checkbox" ? checked : value,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : value,
     }));
   };
 
-  // =========================
+  // =====================================================
   // HANDLE SUBMIT
-  // =========================
+  // =====================================================
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setLoading(true);
-    setError(null);
+    // ===================================================
+    // PREPARE BACKEND DATA
+    // ===================================================
 
-    try {
-      // Backend API will be added here
-      console.log("Service Request:", formData);
+    const submissionData = {
+      ...formData,
 
-      // Temporary delay
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000)
-      );
+      budget_id: formData.budget
+        ? Number(formData.budget)
+        : null,
 
+      timeline_id: formData.timeline
+        ? Number(formData.timeline)
+        : null,
+
+      service_required_id: formData.service
+        ? Number(formData.service)
+        : null,
+    };
+
+    // ===================================================
+    // REMOVE FRONTEND-ONLY FIELDS
+    // ===================================================
+
+    delete submissionData.budget;
+    delete submissionData.timeline;
+    delete submissionData.service;
+
+    // ===================================================
+    // SEND TO REDUX THUNK
+    // ===================================================
+
+    const result = await dispatch(
+      createServiceRequestAction(
+        submissionData
+      )
+    );
+
+    // ===================================================
+    // SUCCESS
+    // ===================================================
+
+    if (
+      createServiceRequestAction.fulfilled.match(
+        result
+      )
+    ) {
       alert(
         "Thank you! Your service request has been submitted."
       );
+
+      // ===============================================
+      // RESET FORM
+      // ===============================================
 
       setFormData({
         full_name: "",
@@ -71,12 +154,6 @@ export default function ServiceRequestForm() {
         additional_information: "",
         terms: false,
       });
-    } catch (error) {
-      setError(
-        error.message || "Failed to submit service request."
-      );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -95,8 +172,6 @@ export default function ServiceRequestForm() {
         </h3>
 
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          {/* FULL NAME */}
-
           <Input
             id="full_name"
             name="full_name"
@@ -107,8 +182,6 @@ export default function ServiceRequestForm() {
             onChange={handleChange}
             required
           />
-
-          {/* EMAIL */}
 
           <Input
             id="email"
@@ -121,8 +194,6 @@ export default function ServiceRequestForm() {
             required
           />
 
-          {/* PHONE */}
-
           <Input
             id="phone"
             name="phone"
@@ -132,8 +203,6 @@ export default function ServiceRequestForm() {
             value={formData.phone}
             onChange={handleChange}
           />
-
-          {/* COMPANY */}
 
           <Input
             id="company"
@@ -176,45 +245,14 @@ export default function ServiceRequestForm() {
               Select a service
             </option>
 
-            <option value="web-development">
-              Web Development
-            </option>
-
-            <option value="mobile-development">
-              Mobile App Development
-            </option>
-
-            <option value="software-development">
-              Custom Software Development
-            </option>
-
-            <option value="ui-ux">
-              UI/UX Design
-            </option>
-
-            <option value="cloud">
-              Cloud Solutions
-            </option>
-
-            <option value="cybersecurity">
-              Cybersecurity
-            </option>
-
-            <option value="database">
-              Database Solutions
-            </option>
-
-            <option value="devops">
-              DevOps & Infrastructure
-            </option>
-
-            <option value="consulting">
-              Technology Consulting
-            </option>
-
-            <option value="other">
-              Other
-            </option>
+            {serviceRequireds.map((service) => (
+              <option
+                key={service.id}
+                value={service.id}
+              >
+                {service.name}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -229,8 +267,6 @@ export default function ServiceRequestForm() {
         </h3>
 
         <div className="mt-5 space-y-5">
-          {/* PROJECT NAME */}
-
           <Input
             id="project_name"
             name="project_name"
@@ -240,8 +276,6 @@ export default function ServiceRequestForm() {
             value={formData.project_name}
             onChange={handleChange}
           />
-
-          {/* DESCRIPTION */}
 
           <div>
             <label
@@ -263,7 +297,9 @@ export default function ServiceRequestForm() {
             />
           </div>
 
-          {/* BUDGET + TIMELINE */}
+          {/* =================================================
+              BUDGET + TIMELINE
+          ================================================= */}
 
           <div className="grid gap-5 sm:grid-cols-2">
             {/* BUDGET */}
@@ -281,35 +317,23 @@ export default function ServiceRequestForm() {
                 name="budget"
                 value={formData.budget}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                required
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
               >
                 <option value="">
                   Select budget
                 </option>
 
-                <option value="under-500">
-                  Under $500
-                </option>
-
-                <option value="500-1000">
-                  $500 – $1,000
-                </option>
-
-                <option value="1000-5000">
-                  $1,000 – $5,000
-                </option>
-
-                <option value="5000-10000">
-                  $5,000 – $10,000
-                </option>
-
-                <option value="10000-plus">
-                  $10,000+
-                </option>
-
-                <option value="not-sure">
-                  Not sure yet
-                </option>
+                {estimatedBudgets.map(
+                  (budget) => (
+                    <option
+                      key={budget.id}
+                      value={budget.id}
+                    >
+                      {budget.name}
+                    </option>
+                  )
+                )}
               </select>
             </div>
 
@@ -328,31 +352,23 @@ export default function ServiceRequestForm() {
                 name="timeline"
                 value={formData.timeline}
                 onChange={handleChange}
+                required
                 className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
               >
                 <option value="">
                   Select timeline
                 </option>
 
-                <option value="urgent">
-                  Urgent
-                </option>
-
-                <option value="1-month">
-                  Within 1 month
-                </option>
-
-                <option value="1-3-months">
-                  1 – 3 months
-                </option>
-
-                <option value="3-6-months">
-                  3 – 6 months
-                </option>
-
-                <option value="flexible">
-                  Flexible
-                </option>
+                {expectedTimelines.map(
+                  (timeline) => (
+                    <option
+                      key={timeline.id}
+                      value={timeline.id}
+                    >
+                      {timeline.name}
+                    </option>
+                  )
+                )}
               </select>
             </div>
           </div>
@@ -380,7 +396,9 @@ export default function ServiceRequestForm() {
             id="additional_information"
             name="additional_information"
             rows="4"
-            value={formData.additional_information}
+            value={
+              formData.additional_information
+            }
             onChange={handleChange}
             placeholder="Additional requirements, existing systems, preferred technologies, etc."
             className="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
@@ -399,7 +417,17 @@ export default function ServiceRequestForm() {
       )}
 
       {/* =====================================================
-          TERMS
+          SUCCESS
+      ===================================================== */}
+
+      {success && (
+        <div className="rounded-lg bg-green-50 p-3 text-sm text-green-600">
+          Service request submitted successfully.
+        </div>
+      )}
+
+      {/* =====================================================
+          TERMS + SUBMIT
       ===================================================== */}
 
       <div className="border-t border-slate-200 pt-6">
@@ -414,28 +442,24 @@ export default function ServiceRequestForm() {
           />
 
           <span>
-            I agree that Chain-Tech may contact me regarding
-            this service request.
+            I agree that Chain-Tech may contact me
+            regarding this service request.
           </span>
         </label>
 
-        {/* =================================================
-            SUBMIT
-        ================================================= */}
-
         <Button
           type="submit"
-          disabled={loading}
+          disabled={creating}
           className="mt-6 w-full rounded-xl px-6 py-4 font-bold disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {loading
+          {creating
             ? "Submitting Service Request..."
             : "Submit Service Request"}
         </Button>
 
         <p className="mt-3 text-center text-xs text-slate-400">
-          Your information will be used only to process your
-          request.
+          Your information will be used only to
+          process your request.
         </p>
       </div>
     </Form>

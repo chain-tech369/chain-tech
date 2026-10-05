@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 # -------------------------
@@ -14,11 +14,16 @@ class UserBase(BaseModel):
 
 
 # -------------------------
-# User Registration
+# User Create
 # -------------------------
 
 class UserCreate(UserBase):
     password: str
+    role_id: int = Field(
+        default=0,
+        ge=0,
+        description="Role ID assigned to the user. 0 means unassigned.",
+    )
 
 
 # -------------------------
@@ -31,6 +36,11 @@ class UserUpdate(BaseModel):
     email: EmailStr | None = None
     password: str | None = None
     is_active: bool | None = None
+    role_id: int | None = Field(
+        default=None,
+        ge=0,
+        description="Role ID assigned to the user. 0 means unassigned.",
+    )
 
 
 # -------------------------
@@ -45,5 +55,5 @@ class UserResponse(UserBase):
     updated_at: datetime | None = None
 
     model_config = ConfigDict(
-        from_attributes=True
+        from_attributes=True,
     )

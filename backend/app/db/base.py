@@ -35,3 +35,5 @@ from app.admin_folders.service_required.service_required_model import ServiceReq
 # import user and others model here
 # =================================
 from app.user.user_models import User
+from app.authorization.permission.permission_model import Permission
+from app.authorization.role_permission.role_permission_model import RolePermission

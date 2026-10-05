@@ -24,7 +24,10 @@ from app.admin_folders.estimated_budget.estimated_budget_route import router as 
 from app.admin_folders.expected_timeline.expected_timeline_route import router as expected_timeline_router
 from app.admin_folders.service_required.service_required_route import router as service_required_router
 from app.protected_folders.service_request.service_request_route import router as service_request_router
-
+from app.authorization.permission.permission_route import router as permission_router
+from app.authorization.role_permission.role_permission_route import (
+    router as role_permission_router,
+)
 
 
 
@@ -65,6 +68,8 @@ app.include_router(estimated_budget_router)
 app.include_router(expected_timeline_router)
 app.include_router(service_required_router)
 app.include_router(service_request_router)
+app.include_router(permission_router)
+app.include_router(role_permission_router)
 
 
 

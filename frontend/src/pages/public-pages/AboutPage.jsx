@@ -195,7 +195,7 @@ export default function AboutPage() {
           </p>
 
           <a
-            href="/service"
+            href="/services"
             className="mt-8 inline-block rounded-xl bg-yellow-400 px-8 py-4 font-bold text-slate-950 transition hover:bg-yellow-300"
           >
             Explore Our Services

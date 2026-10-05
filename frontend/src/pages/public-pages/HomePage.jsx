@@ -38,7 +38,7 @@ export default function HomePage() {
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
 
                 <a
-                  href="/service"
+                  href="/services"
                   className="rounded-xl bg-yellow-400 px-7 py-3.5 text-center font-bold text-slate-950 transition hover:bg-yellow-300"
                 >
                   Explore Services

@@ -4,13 +4,17 @@ import PublicLayout from "../layouts/PublicLayout";
 import ProtectedLayout from "../layouts/ProtectedLayout";
 import ProfileLayout from "../layouts/ProfileLayout";
 
+import store from "../app/store";
+
 // =====================================
 // LOADERS
 // =====================================
 
 import { userLoader } from "../loaders/userLoader";
 import { profileLoader } from "../loaders/profileLoader";
-
+import { estimatedBudgetLoader } from "../loaders/estimatedbudgetLoader";
+import {expectedTimelineLoader}  from "../loaders/expectedtimelineLoader"
+import { servicerequestLoader } from "../loaders/servicerequestLoader";
 // =====================================
 // PUBLIC PAGES
 // =====================================
@@ -121,6 +125,7 @@ export const router = createBrowserRouter([
       {
         path: "/service-request",
         element: <ServiceRequestPage />,
+        loader: servicerequestLoader,
       },
 
       {
