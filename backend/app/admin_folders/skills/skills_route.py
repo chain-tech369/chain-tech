@@ -2,16 +2,17 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.dependencies.get_db import get_db
+from app.authorization.authorization import require_permission
+from app.user.user_models import User
 
-from app.admin_folders.skills.skills_schema import (
+from app.admin_folders.skills import (
     SkillCreate,
     SkillResponse,
     SkillUpdate,
-)
-
-from app.admin_folders.skills.skills_service import (
     SkillService,
 )
+
+
 
 
 router = APIRouter(
@@ -40,6 +41,9 @@ def get_skill_service(
 )
 def get_skills(
     service: SkillService = Depends(get_skill_service),
+    current_user: User = Depends(
+        require_permission("skills:read")
+    ),
 ):
     return service.get_all()
 
@@ -55,6 +59,9 @@ def get_skills(
 def get_skill(
     skill_id: int,
     service: SkillService = Depends(get_skill_service),
+    current_user: User = Depends(
+        require_permission("skills:read")
+    ),
 ):
     return service.get_by_id(skill_id)
 
@@ -71,6 +78,9 @@ def get_skill(
 def create_skill(
     data: SkillCreate,
     service: SkillService = Depends(get_skill_service),
+    current_user: User = Depends(
+        require_permission("skills:create")
+    ),
 ):
     return service.create(data)
 
@@ -87,6 +97,9 @@ def update_skill(
     skill_id: int,
     data: SkillUpdate,
     service: SkillService = Depends(get_skill_service),
+    current_user: User = Depends(
+        require_permission("skills:update")
+    ),
 ):
     return service.update(
         skill_id,
@@ -105,6 +118,9 @@ def update_skill(
 def delete_skill(
     skill_id: int,
     service: SkillService = Depends(get_skill_service),
+    current_user: User = Depends(
+        require_permission("skills:delete")
+    ),
 ):
     service.delete(skill_id)
 

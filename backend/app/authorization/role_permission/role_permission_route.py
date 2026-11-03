@@ -9,6 +9,8 @@ from app.authorization.role_permission.role_permission_service import (
     RolePermissionService,
 )
 from app.dependencies.get_db import get_db
+from app.authorization.authorization import require_permission
+from app.user.user_models import User
 
 
 router = APIRouter(
@@ -29,6 +31,9 @@ router = APIRouter(
 def assign_permission_to_role(
     data: RolePermissionCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("role_permissions:create")
+    ),
 ):
     service = RolePermissionService(db)
 
@@ -60,6 +65,9 @@ def assign_permission_to_role(
 def get_role_permissions(
     role_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("role_permissions:read")
+    ),
 ):
     service = RolePermissionService(db)
 
@@ -85,6 +93,9 @@ def get_role_permissions(
 def get_permission_roles(
     permission_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("role_permissions:read")
+    ),
 ):
     service = RolePermissionService(db)
 
@@ -113,6 +124,9 @@ def get_role_permission(
     role_id: int,
     permission_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("role_permissions:read")
+    ),
 ):
     service = RolePermissionService(db)
 
@@ -141,6 +155,9 @@ def remove_permission_from_role(
     role_id: int,
     permission_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("role_permissions:delete")
+    ),
 ):
     service = RolePermissionService(db)
 

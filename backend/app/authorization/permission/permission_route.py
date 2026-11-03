@@ -8,6 +8,8 @@ from app.authorization.permission.permission_schema import (
 )
 from app.authorization.permission.permission_service import PermissionService
 from app.dependencies.get_db import get_db
+from app.authorization.authorization import require_permission
+from app.user.user_models import User
 
 
 router = APIRouter(
@@ -28,6 +30,9 @@ router = APIRouter(
 def create_permission(
     data: PermissionCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("permissions:create")
+    ),
 ):
     service = PermissionService(db)
 
@@ -52,6 +57,9 @@ def create_permission(
 )
 def get_permissions(
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("permissions:read")
+    ),
 ):
     service = PermissionService(db)
 
@@ -70,6 +78,9 @@ def get_permissions(
 def get_permission(
     permission_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("permissions:read")
+    ),
 ):
     service = PermissionService(db)
 
@@ -96,6 +107,9 @@ def update_permission(
     permission_id: int,
     data: PermissionUpdate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("permissions:update")
+    ),
 ):
     service = PermissionService(db)
 
@@ -129,6 +143,9 @@ def update_permission(
 def delete_permission(
     permission_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("permissions:delete")
+    ),
 ):
     service = PermissionService(db)
 

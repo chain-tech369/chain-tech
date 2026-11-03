@@ -1,8 +1,11 @@
 from sqlalchemy.orm import Session
 
 from app.auth.security import hash_password
-from app.user.user_repository import UserRepository
-from app.user.user_schemas import UserCreate, UserUpdate
+from app.user import(
+    UserCreate,
+    UserUpdate,
+    UserRepository,
+)
 
 
 class UserService:

@@ -1,21 +1,24 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.admin_folders.service_required.service_required_schema import (
+from app.admin_folders.service_required import (
     ServiceRequiredCreate,
     ServiceRequiredResponse,
     ServiceRequiredUpdate,
+     ServiceRequiredService,
 )
-from app.admin_folders.service_required import (
-    service_required_service,
-)
+
 from app.dependencies.get_db import get_db
+from app.authorization.authorization import require_permission
+from app.user.user_models import User
 
 
 router = APIRouter(
     prefix="/admin/service-requireds",
     tags=["Service Required"],
 )
+
+service_required_service = ServiceRequiredService()
 
 
 @router.get(
@@ -25,10 +28,11 @@ router = APIRouter(
 )
 def get_service_requireds(
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("service_required:read")
+    ),
 ):
-    return service_required_service.get_all_service_requireds(
-        db
-    )
+    return service_required_service.get_all_service_requireds(db)
 
 
 @router.get(
@@ -39,6 +43,9 @@ def get_service_requireds(
 def get_service_required(
     service_required_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("service_required:read")
+    ),
 ):
     return service_required_service.get_service_required_by_id(
         db,
@@ -54,6 +61,9 @@ def get_service_required(
 def create_service_required(
     service_required_data: ServiceRequiredCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("service_required:create")
+    ),
 ):
     return service_required_service.create_service_required(
         db,
@@ -70,6 +80,9 @@ def update_service_required(
     service_required_id: int,
     service_required_data: ServiceRequiredUpdate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("service_required:update")
+    ),
 ):
     return service_required_service.update_service_required(
         db,
@@ -85,6 +98,9 @@ def update_service_required(
 def delete_service_required(
     service_required_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("service_required:delete")
+    ),
 ):
     service_required_service.delete_service_required(
         db,

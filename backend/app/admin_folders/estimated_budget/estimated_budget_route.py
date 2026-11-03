@@ -1,15 +1,16 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.admin_folders.estimated_budget.estimated_budget_schema import (
+from app.authorization.authorization import require_permission
+from app.admin_folders.estimated_budget import (
     EstimatedBudgetCreate,
     EstimatedBudgetResponse,
     EstimatedBudgetUpdate,
-)
-from app.admin_folders.estimated_budget.estimated_budget_service import (
     EstimatedBudgetService,
 )
+
 from app.dependencies.get_db import get_db
+from app.user.user_models import User
 
 
 router = APIRouter(
@@ -24,6 +25,9 @@ router = APIRouter(
 )
 def get_estimated_budgets(
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("estimated_budget:read")
+    ),
 ):
     return EstimatedBudgetService.get_all(db)
 
@@ -35,6 +39,9 @@ def get_estimated_budgets(
 def get_estimated_budget(
     estimated_budget_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("estimated_budget:read")
+    ),
 ):
     return EstimatedBudgetService.get_by_id(
         db,
@@ -50,6 +57,9 @@ def get_estimated_budget(
 def create_estimated_budget(
     data: EstimatedBudgetCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("estimated_budget:create")
+    ),
 ):
     return EstimatedBudgetService.create(
         db,
@@ -65,6 +75,9 @@ def update_estimated_budget(
     estimated_budget_id: int,
     data: EstimatedBudgetUpdate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("estimated_budget:update")
+    ),
 ):
     return EstimatedBudgetService.update(
         db,
@@ -80,6 +93,9 @@ def update_estimated_budget(
 def delete_estimated_budget(
     estimated_budget_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("estimated_budget:delete")
+    ),
 ):
     EstimatedBudgetService.delete(
         db,

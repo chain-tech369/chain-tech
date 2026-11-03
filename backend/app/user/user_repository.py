@@ -1,8 +1,12 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.user.user_models import User
-from app.user.user_schemas import UserCreate, UserUpdate
+
+from app.user import (
+    UserCreate, 
+    UserUpdate,
+    User,
+)
 from app.protected_folders.profile.profile_model import Profile
 
 

@@ -1,7 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.admin_folders.estimated_budget.estimated_budget_model import EstimatedBudget
+from app.admin_folders.estimated_budget import (
+    EstimatedBudget,
+)
 
 
 class EstimatedBudgetRepository:
@@ -46,8 +48,7 @@ class EstimatedBudgetRepository:
         estimated_budget: EstimatedBudget,
     ) -> EstimatedBudget:
         db.add(estimated_budget)
-        db.commit()
-        db.refresh(estimated_budget)
+        db.flush()
 
         return estimated_budget
 
@@ -64,8 +65,7 @@ class EstimatedBudgetRepository:
                 value,
             )
 
-        db.commit()
-        db.refresh(estimated_budget)
+        db.flush()
 
         return estimated_budget
 
@@ -75,4 +75,4 @@ class EstimatedBudgetRepository:
         estimated_budget: EstimatedBudget,
     ) -> None:
         db.delete(estimated_budget)
-        db.commit()
+        db.flush()

@@ -4,9 +4,14 @@ from sqlalchemy.orm import Session
 from app.authorization.authorization import require_permission
 from app.dependencies.get_current_user import get_current_user
 from app.dependencies.get_db import get_db
-from app.user.user_models import User
-from app.user.user_schemas import UserCreate, UserResponse, UserUpdate
-from app.user.user_services import UserService
+from app.user import (
+    UserCreate,
+    UserResponse,
+    UserUpdate,
+    User,
+    UserService,
+)
+
 
 
 router = APIRouter(
@@ -48,11 +53,10 @@ def create_user(
     service = UserService(db)
 
     try:
-        user = service.create_user(
+        return service.create_user(
             user_data=user_data,
+            role_id=user_data.role_id,
         )
-
-        return user
 
     except ValueError as e:
         raise HTTPException(
@@ -155,12 +159,10 @@ def update_user(
     service = UserService(db)
 
     try:
-        user = service.update_user(
+        return service.update_user(
             user_id=user_id,
             user_data=user_data,
         )
-
-        return user
 
     except ValueError as e:
         raise HTTPException(

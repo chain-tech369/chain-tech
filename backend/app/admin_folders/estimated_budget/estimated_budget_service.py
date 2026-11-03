@@ -2,14 +2,17 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+
 from app.admin_folders.estimated_budget.estimated_budget_repository import (
     EstimatedBudgetRepository,
 )
-from app.admin_folders.estimated_budget.estimated_budget_schema import (
+from app.admin_folders.estimated_budget import (
     EstimatedBudgetCreate,
     EstimatedBudgetUpdate,
+    EstimatedBudget,
+    EstimatedBudgetRepository,
+
 )
-from app.admin_folders.estimated_budget.estimated_budget_model import EstimatedBudget
 
 
 class EstimatedBudgetService:
@@ -25,14 +28,12 @@ class EstimatedBudgetService:
         db: Session,
         estimated_budget_id: int,
     ) -> EstimatedBudget:
-        estimated_budget = (
-            EstimatedBudgetRepository.get_by_id(
-                db,
-                estimated_budget_id,
-            )
+        estimated_budget = EstimatedBudgetRepository.get_by_id(
+            db,
+            estimated_budget_id,
         )
 
-        if not estimated_budget:
+        if estimated_budget is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Estimated budget not found.",
@@ -45,14 +46,13 @@ class EstimatedBudgetService:
         db: Session,
         data: EstimatedBudgetCreate,
     ) -> EstimatedBudget:
-        existing_budget = (
-            EstimatedBudgetRepository.get_by_name(
-                db,
-                data.name,
-            )
+
+        existing_budget = EstimatedBudgetRepository.get_by_name(
+            db,
+            data.name,
         )
 
-        if existing_budget:
+        if existing_budget is not None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Estimated budget with this name already exists.",
@@ -65,10 +65,13 @@ class EstimatedBudgetService:
         )
 
         try:
-            return EstimatedBudgetRepository.create(
+            EstimatedBudgetRepository.create(
                 db,
                 estimated_budget,
             )
+
+            db.commit()
+            db.refresh(estimated_budget)
 
         except IntegrityError:
             db.rollback()
@@ -78,12 +81,23 @@ class EstimatedBudgetService:
                 detail="Estimated budget with this name already exists.",
             )
 
+        except Exception:
+            db.rollback()
+
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to create estimated budget.",
+            )
+
+        return estimated_budget
+
     @staticmethod
     def update(
         db: Session,
         estimated_budget_id: int,
         data: EstimatedBudgetUpdate,
     ) -> EstimatedBudget:
+
         estimated_budget = EstimatedBudgetService.get_by_id(
             db,
             estimated_budget_id,
@@ -94,15 +108,13 @@ class EstimatedBudgetService:
         )
 
         if "name" in update_data:
-            existing_budget = (
-                EstimatedBudgetRepository.get_by_name(
-                    db,
-                    update_data["name"],
-                )
+            existing_budget = EstimatedBudgetRepository.get_by_name(
+                db,
+                update_data["name"],
             )
 
             if (
-                existing_budget
+                existing_budget is not None
                 and existing_budget.id != estimated_budget_id
             ):
                 raise HTTPException(
@@ -111,11 +123,14 @@ class EstimatedBudgetService:
                 )
 
         try:
-            return EstimatedBudgetRepository.update(
+            EstimatedBudgetRepository.update(
                 db,
                 estimated_budget,
                 update_data,
             )
+
+            db.commit()
+            db.refresh(estimated_budget)
 
         except IntegrityError:
             db.rollback()
@@ -125,17 +140,38 @@ class EstimatedBudgetService:
                 detail="Estimated budget with this name already exists.",
             )
 
+        except Exception:
+            db.rollback()
+
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to update estimated budget.",
+            )
+
+        return estimated_budget
+
     @staticmethod
     def delete(
         db: Session,
         estimated_budget_id: int,
     ) -> None:
+
         estimated_budget = EstimatedBudgetService.get_by_id(
             db,
             estimated_budget_id,
         )
 
-        if estimated_budget.service_requests:
+        try:
+            EstimatedBudgetRepository.delete(
+                db,
+                estimated_budget,
+            )
+
+            db.commit()
+
+        except IntegrityError:
+            db.rollback()
+
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=(
@@ -144,7 +180,10 @@ class EstimatedBudgetService:
                 ),
             )
 
-        EstimatedBudgetRepository.delete(
-            db,
-            estimated_budget,
-        )
+        except Exception:
+            db.rollback()
+
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to delete estimated budget.",
+            )

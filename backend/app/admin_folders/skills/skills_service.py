@@ -1,11 +1,12 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.admin_folders.skills.skills_model import Skill
-from app.admin_folders.skills.skills_repository import SkillRepository
-from app.admin_folders.skills.skills_schema import (
+
+from app.admin_folders.skills import (
     SkillCreate,
     SkillUpdate,
+    Skill,
+    SkillRepository,
 )
 
 

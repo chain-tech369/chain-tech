@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.dependencies.get_db import get_db
+from app.authorization.authorization import require_permission
+from app.user.user_models import User
 from app.admin_folders.experience_level.experience_schema import (
     ExperienceCreate,
     ExperienceResponse,
@@ -24,6 +26,9 @@ router = APIRouter(
 def create_experience(
     data: ExperienceCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("experience_level:create")
+    ),
 ):
 
     service = ExperienceService(db)
@@ -37,6 +42,9 @@ def create_experience(
 )
 def get_experiences(
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("experience_level:read")
+    ),
 ):
 
     service = ExperienceService(db)
@@ -51,6 +59,9 @@ def get_experiences(
 def get_experience(
     experience_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("experience_level:read")
+    ),
 ):
 
     service = ExperienceService(db)
@@ -66,6 +77,9 @@ def update_experience(
     experience_id: int,
     data: ExperienceUpdate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("experience_level:update")
+    ),
 ):
 
     service = ExperienceService(db)
@@ -82,6 +96,9 @@ def update_experience(
 def delete_experience(
     experience_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("experience_level:delete")
+    ),
 ):
 
     service = ExperienceService(db)

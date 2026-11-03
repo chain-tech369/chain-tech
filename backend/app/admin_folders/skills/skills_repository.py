@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.admin_folders.skills.skills_model import Skill
+from app.admin_folders.skills import Skill
 
 
 class SkillRepository:

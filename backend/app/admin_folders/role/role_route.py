@@ -2,16 +2,16 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.dependencies.get_db import get_db
+from app.authorization.authorization import require_permission
+from app.user.user_models import User
 
-from app.admin_folders.role.role_schema import (
+from app.admin_folders.role import (
     RoleCreate,
     RoleResponse,
     RoleUpdate,
-)
-
-from app.admin_folders.role.role_service import (
     RoleService,
 )
+
 
 
 router = APIRouter(
@@ -32,6 +32,9 @@ def get_role_service(
 )
 def get_roles(
     service: RoleService = Depends(get_role_service),
+    current_user: User = Depends(
+        require_permission("roles:read")
+    ),
 ):
     return service.get_all()
 
@@ -43,6 +46,9 @@ def get_roles(
 def get_role(
     role_id: int,
     service: RoleService = Depends(get_role_service),
+    current_user: User = Depends(
+        require_permission("roles:read")
+    ),
 ):
     return service.get_by_id(role_id)
 
@@ -55,6 +61,9 @@ def get_role(
 def create_role(
     role_data: RoleCreate,
     service: RoleService = Depends(get_role_service),
+    current_user: User = Depends(
+        require_permission("roles:create")
+    ),
 ):
     return service.create(role_data)
 
@@ -67,6 +76,9 @@ def update_role(
     role_id: int,
     role_data: RoleUpdate,
     service: RoleService = Depends(get_role_service),
+    current_user: User = Depends(
+        require_permission("roles:update")
+    ),
 ):
     return service.update(
         role_id,
@@ -81,6 +93,9 @@ def update_role(
 def delete_role(
     role_id: int,
     service: RoleService = Depends(get_role_service),
+    current_user: User = Depends(
+        require_permission("roles:delete")
+    ),
 ):
     service.delete(role_id)
 

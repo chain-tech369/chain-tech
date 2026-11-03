@@ -14,13 +14,18 @@ class AuthService:
     def __init__(self, db: Session):
         self.user_repository = UserRepository(db)
 
-    def register(self, user_data: RegisterRequest):
+    def register(
+        self,
+        user_data: RegisterRequest,
+    ):
         existing_user = self.user_repository.get_by_email(
             user_data.email
         )
 
         if existing_user:
-            raise ValueError("Email already registered")
+            raise ValueError(
+                "Email already registered"
+            )
 
         hashed_password = hash_password(
             user_data.password
@@ -40,8 +45,9 @@ class AuthService:
         password: str,
         remember: bool = False,
     ):
-
-        user = self.user_repository.get_by_email(email)
+        user = self.user_repository.get_by_email(
+            email
+        )
 
         if not user:
             raise ValueError(

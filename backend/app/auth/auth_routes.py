@@ -8,12 +8,12 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 
-from app.auth.auth_schema import (
+from app.auth import (
+    AuthService,
     LoginRequest,
     RegisterRequest,
     TokenResponse,
 )
-from app.auth.auth_service import AuthService
 from app.dependencies.get_db import get_db
 from app.user.user_schemas import UserResponse
 
@@ -40,14 +40,13 @@ def register(
     service = AuthService(db)
 
     try:
-        user = service.register(user_data)
-        return user
+        return service.register(user_data)
 
-    except ValueError as e:
+    except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e),
-        )
+            detail=str(exc),
+        ) from exc
 
 
 # ============================================================
@@ -72,51 +71,41 @@ def login(
             remember=login_data.remember,
         )
 
-        # ====================================================
-        # REMEMBER ME
-        # ====================================================
-
-        if login_data.remember:
-
-            # Remember Me enabled
-            # Cookie persists for 30 days
-            response.set_cookie(
-                key="refresh_token",
-                value=tokens["refresh_token"],
-                httponly=True,
-                secure=False,  # True in production with HTTPS
-                samesite="lax",
-                max_age=60 * 60 * 24 * 30,
-                path="/",
-            )
-
-        else:
-
-            # Remember Me disabled
-            # Session cookie: removed when browser session ends
-            response.set_cookie(
-                key="refresh_token",
-                value=tokens["refresh_token"],
-                httponly=True,
-                secure=False,  # True in production with HTTPS
-                samesite="lax",
-                path="/",
-            )
-
-        # Return ONLY the access token
-        return {
-            "access_token": tokens["access_token"],
-            "token_type": tokens["token_type"],
-        }
-
-    except ValueError as e:
+    except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=str(e),
+            detail=str(exc),
             headers={
                 "WWW-Authenticate": "Bearer",
             },
-        )
+        ) from exc
+
+    # --------------------------------------------------------
+    # Refresh token cookie
+    # --------------------------------------------------------
+
+    cookie_options = {
+        "key": "refresh_token",
+        "value": tokens["refresh_token"],
+        "httponly": True,
+        "secure": False,  # Change to True in production with HTTPS
+        "samesite": "lax",
+        "path": "/",
+    }
+
+    if login_data.remember:
+        cookie_options["max_age"] = 60 * 60 * 24 * 30
+
+    response.set_cookie(**cookie_options)
+
+    # --------------------------------------------------------
+    # Return only the access token
+    # --------------------------------------------------------
+
+    return {
+        "access_token": tokens["access_token"],
+        "token_type": tokens["token_type"],
+    }
 
 
 # ============================================================
@@ -132,14 +121,15 @@ def refresh(
     response: Response,
     db: Session = Depends(get_db),
 ):
-    refresh_token = request.cookies.get(
-        "refresh_token"
-    )
+    refresh_token = request.cookies.get("refresh_token")
 
     if not refresh_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Refresh token not found",
+            headers={
+                "WWW-Authenticate": "Bearer",
+            },
         )
 
     service = AuthService(db)
@@ -149,30 +139,7 @@ def refresh(
             refresh_token
         )
 
-        # If refresh token rotation is enabled,
-        # replace the existing cookie.
-        if tokens.get("refresh_token"):
-
-            response.set_cookie(
-                key="refresh_token",
-                value=tokens["refresh_token"],
-                httponly=True,
-                secure=False,
-                samesite="lax",
-                max_age=60 * 60 * 24 * 30,
-                path="/",
-            )
-
-        return {
-            "access_token": tokens["access_token"],
-            "token_type": tokens.get(
-                "token_type",
-                "bearer",
-            ),
-        }
-
-    except ValueError as e:
-
+    except ValueError as exc:
         response.delete_cookie(
             key="refresh_token",
             path="/",
@@ -180,17 +147,46 @@ def refresh(
 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=str(e),
+            detail=str(exc),
+            headers={
+                "WWW-Authenticate": "Bearer",
+            },
+        ) from exc
+
+    # --------------------------------------------------------
+    # Refresh token rotation
+    # --------------------------------------------------------
+
+    new_refresh_token = tokens.get("refresh_token")
+
+    if new_refresh_token:
+        response.set_cookie(
+            key="refresh_token",
+            value=new_refresh_token,
+            httponly=True,
+            secure=False,  # Change to True in production with HTTPS
+            samesite="lax",
+            max_age=60 * 60 * 24 * 30,
+            path="/",
         )
+
+    return {
+        "access_token": tokens["access_token"],
+        "token_type": tokens.get("token_type", "bearer"),
+    }
 
 
 # ============================================================
 # LOGOUT
 # ============================================================
 
-@router.post("/logout")
-def logout(response: Response):
-
+@router.post(
+    "/logout",
+    status_code=status.HTTP_200_OK,
+)
+def logout(
+    response: Response,
+):
     response.delete_cookie(
         key="refresh_token",
         path="/",

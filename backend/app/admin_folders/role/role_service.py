@@ -1,11 +1,12 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.admin_folders.role.role_model import Role
-from app.admin_folders.role.role_repository import RoleRepository
-from app.admin_folders.role.role_schema import (
+from app.admin_folders.role import (
+    Role,
     RoleCreate,
     RoleUpdate,
+    RoleResponse,
+    RoleRepository,
 )
 
 
