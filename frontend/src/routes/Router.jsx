@@ -1,22 +1,24 @@
 import { createBrowserRouter } from "react-router-dom";
 
+// ==============================================
+// Import Layouts Here
+// ==============================================
+
 import PublicLayout from "../layouts/PublicLayout";
 import ProtectedLayout from "../layouts/ProtectedLayout";
 import ProfileLayout from "../layouts/ProfileLayout";
+import AdminLayout from "../layouts/AdminLayout";
 
-import store from "../app/store";
+
 
 // =====================================
-// LOADERS
+// Import LOADERS Here
 // =====================================
 
-import { userLoader } from "../loaders/userLoader";
-import { profileLoader } from "../loaders/profileLoader";
-import { estimatedBudgetLoader } from "../loaders/estimatedbudgetLoader";
-import {expectedTimelineLoader}  from "../loaders/expectedtimelineLoader"
 import { servicerequestLoader } from "../loaders/servicerequestLoader";
+
 // =====================================
-// PUBLIC PAGES
+// Import PUBLIC PAGES Here
 // =====================================
 
 import {
@@ -27,7 +29,7 @@ import {
 } from "../pages/public-pages";
 
 // =====================================
-// USER PAGES
+// Import USER PAGES Here
 // =====================================
 
 import {
@@ -37,7 +39,7 @@ import {
 } from "../pages/user-pages";
 
 // =====================================
-// PROTECTED PAGES
+// Import PROTECTED PAGES Here
 // =====================================
 
 import {
@@ -49,7 +51,7 @@ import {
 } from "../pages/protected-pages";
 
 // =====================================
-// PROFILE / ACCOUNT PAGES
+// Import PROFILE PAGES Here
 // =====================================
 
 import {
@@ -60,12 +62,28 @@ import {
 } from "../pages/ProfilePages";
 
 // =====================================
+// Import ADMIN PAGES Here
+// =====================================
+
+import {
+  CreateEstimatedBudgetPage,
+  DeleteEstimatedBudgetPage,
+  EditEstimatedBudgetPage,
+  CreateExpectedTimelinePage,
+  DeleteExpectedTimelinePage,
+  EditExpectedTimelinePage,
+  CreateRolePage,
+  DeleteRolePage,
+  EditRolePage,
+} from "../pages/admin_pages";
+
+// =====================================
 // ROUTER
 // =====================================
 
 export const router = createBrowserRouter([
   // =====================================
-  // PUBLIC ROUTES
+  // =========***PUBLIC Layout***=========
   // =====================================
 
   {
@@ -104,8 +122,10 @@ export const router = createBrowserRouter([
     ],
   },
 
+  //*--------------------------------------------------------------------*//
+
   // =====================================
-  // PROTECTED ROUTES
+  // ========***PROTECTED Layout***=======
   // =====================================
 
   {
@@ -138,8 +158,10 @@ export const router = createBrowserRouter([
         element: <CurrentUserPage />,
       },
 
+      //*-------------------------------------------------------------------*//
+
       // =====================================
-      // PROFILE / ACCOUNT
+      // ========***PROFILE Layout***=========
       // =====================================
 
       {
@@ -169,15 +191,66 @@ export const router = createBrowserRouter([
           
         ],
       },
-
-      // =====================================
-      // LOGOUT
-      // =====================================
-
       {
         path: "/logout",
         element: <LogoutPage />,
       },
+    ],
+  },
+  
+  //*--------------------------------------------------------------------------*//
+
+  // ========================================
+  // ===========***ADMIN Layout***===========
+  // ========================================
+  {
+    element: <AdminLayout />,
+    children:[
+  // ----------------------------------------
+  // estimated budget pages
+  // ----------------------------------------
+    {
+      path: "/createbudget",
+        element: < CreateEstimatedBudgetPage/>,
+    },
+    {
+      path: "/editbudget",
+        element: <EditEstimatedBudgetPage />,
+    },
+    {
+      path: "/deletebudget",
+        element: <DeleteEstimatedBudgetPage />,
+    },
+  // -----------------------------------------
+  // estimated budget pages
+  // -----------------------------------------
+    {
+      path: "/createtimeline",
+        element: < CreateExpectedTimelinePage/>,
+    },
+    {
+      path: "/edittimeline",
+        element: <EditExpectedTimelinePage />,
+    },
+    {
+      path: "/deletetimeline",
+        element: <DeleteExpectedTimelinePage />,
+    },
+    // -----------------------------------------
+  // roles pages
+  // -----------------------------------------
+    {
+      path: "/createroles",
+        element: < CreateRolePage/>,
+    },
+    {
+      path: "/editroles",
+        element: <EditRolePage />,
+    },
+    {
+      path: "/deleterole",
+        element: <DeleteRolePage />,
+    },
     ],
   },
 ]);

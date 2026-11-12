@@ -6,24 +6,24 @@ const AdminsidebarLinks = [
     path: "/protected-home",
   },
   {
-    name: "Services",
-    path: "/protected-services",
+    name: "create budget",
+    path: "/createbudget",
   },
   {
-    name: "Service Requests",
-    path: "/service-requests",
+    name: "create timeline",
+    path: "/createtimeline",
   },
   {
-    name: "Join Us",
-    path: "/join-us",
+    name: "create roles",
+    path: "/createroles",
   },
   {
-    name: "Profile",
-    path: "/profile/edit",
+    name: "edit roles",
+    path: "/editroles",
   },
   {
-    name: "Settings",
-    path: "/settings",
+    name: "delete roles",
+    path: "/deleterole",
   },
 ];
 
