@@ -48,7 +48,7 @@ class User(Base):
     role_id = Column(
         Integer,
         ForeignKey("roles.id"),
-        nullable=False,
+        nullable=False,default=4,
     )
 
     created_at = Column(
