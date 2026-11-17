@@ -8,7 +8,7 @@ import {
   addExperienceLevel,
   editExperienceLevel,
   removeExperienceLevel,
-} from "../myapp/admin_app/experimence_level/actions/experiencelevelActions";
+} from "../actions/experiencelevelActions";
 
 
 const initialState = {

@@ -22,15 +22,15 @@ import {
 
 import {
   fetchProfessionalRoles,
-} from "../../actions/professionalroleActions";
+} from "../../../admin_app/professional_role/actions/professionalroleActions";
 
 import {
   fetchExperienceLevels,
-} from "../../actions/experiencelevelActions";
+} from "../../../admin_app/experience_level/actions/experiencelevelActions";
 
 import {
   fetchSkills,
-} from "../../actions/skillsActions";
+} from "../../../admin_app/skill/actions/skillsActions";
 
 
 export default function JoinUsForm() {

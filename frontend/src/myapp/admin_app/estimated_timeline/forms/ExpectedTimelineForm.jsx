@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 // Reusable components
-import Form from "../uis/Form";
-import Input from "../uis/Input";
-import Button from "../uis/Button";
+import Form from "../../../../components/uis/Form";
+import Input from "../../../../components/uis/Input";
+import Button from "../../../../components/uis/Button";
 
 export default function ExpectedTimelineForm({
   initialData = {},

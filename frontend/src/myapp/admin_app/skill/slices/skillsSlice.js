@@ -8,7 +8,7 @@ import {
   addSkill,
   editSkill,
   removeSkill,
-} from "../myapp/admin_app/skill/actions/skillsActions";
+} from "../actions/skillsActions";
 
 
 const initialState = {

@@ -1,6 +1,6 @@
 // src/apis/professionalroleApi.js
 
-import api from "./axios";
+import api from "../../../../api_url/axios";
 
 
 // ============================================

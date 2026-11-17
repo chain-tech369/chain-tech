@@ -6,7 +6,7 @@ import {
     createExpectedTimelineApi,
     updateExpectedTimelineApi,
     deleteExpectedTimelineApi,
-} from "../api_url/expectedtimelineApi";
+} from "../apis/expectedtimelineApi";
 
 
 // GET all expected timelines

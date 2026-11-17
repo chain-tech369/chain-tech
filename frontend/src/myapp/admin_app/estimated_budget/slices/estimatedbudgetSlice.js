@@ -6,7 +6,7 @@ import {
   createEstimatedBudget,
   updateEstimatedBudget,
   deleteEstimatedBudget,
-} from "../myapp/admin_app/estimated_budget/actions/estimatedbudgetAction";
+} from "../actions/estimatedbudgetAction";
 
 const initialState = {
   estimatedBudgets: [],

@@ -5,13 +5,13 @@ export * from "./estimated_budget/pages"
 export * from "./estimated_timeline/pages"
 
 // experience level
-export * from "./experimence_level/pages"
+export * from "./experience_level/pages"
 
 // permission
 export * from "./permissions/pages"
 
 // permissions role
-export * from "permissions_role/pages"
+export * from "./permissions_role/pages"
 
 // professional role
 export * from "./professional_role/pages"

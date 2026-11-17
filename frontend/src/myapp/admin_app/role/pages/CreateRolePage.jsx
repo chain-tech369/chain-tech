@@ -1,4 +1,4 @@
-import RoleForm from "../../../components/forms/RoleForm";
+import RoleForm from "../forms/RoleForm";
 
 export default function CreateRolePage() {
   const handleCreate = async (formData) => {

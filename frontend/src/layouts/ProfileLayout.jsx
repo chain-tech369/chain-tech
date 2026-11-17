@@ -15,7 +15,7 @@ import ProfileSide from "../components/sidebars/ProfileSidebar";
 
 import {
   fetchProfile,
-} from "../myapp/profile/actions/profileActions";
+} from "../myapp/protected_app/profile/actions/profileActions";
 
 export default function ProfileLayout() {
   // ==========================================

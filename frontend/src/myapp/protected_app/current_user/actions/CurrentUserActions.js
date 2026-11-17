@@ -5,7 +5,7 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
-} from "../myapp/user/slices/userSlice";
+} from "../..//user/slices/userSlice";
 
 import {
   getCurrentUser,

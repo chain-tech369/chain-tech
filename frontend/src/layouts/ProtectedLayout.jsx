@@ -13,9 +13,8 @@ import {
 import ProtectedNavbar from "../components/navbars/ProtectedNavbar";
 import ProtectedFooter from "../components/footers/ProtectedFooter";
 
-import {
-  fetchCurrentUser,
-} from "../actions/CurrentUserActions";
+
+import { fetchCurrentUser } from "../myapp/protected_app/current_user/actions/CurrentUserActions";
 
 export default function ProtectedLayout() {
   const dispatch = useDispatch();

@@ -14,7 +14,7 @@ import {
   editProfile,
 } from "../actions/profileActions";
 
-import UserAvatar from "../../../components/uis/UserAvatar";
+import UserAvatar from "../../../../components/uis/UserAvatar";
 
 export default function EditProfilePage() {
   const dispatch = useDispatch();

@@ -8,7 +8,7 @@ import {
   createProfessionalRole,
   updateProfessionalRole,
   deleteProfessionalRole,
-} from "../api_url/professionalroleApi";
+} from "../apis/professionalroleApi";
 
 
 // ============================================

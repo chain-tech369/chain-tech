@@ -1,4 +1,4 @@
-import ExpectedTimelineForm from "../../../components/forms/ExpectedTimelineForm";
+import ExpectedTimelineForm from "../forms/ExpectedTimelineForm";
 
 export default function CreateExpectedTimelinePage() {
   const handleCreate = async (formData) => {

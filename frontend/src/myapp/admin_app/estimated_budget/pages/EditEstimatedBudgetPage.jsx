@@ -1,4 +1,4 @@
-import EstimatedBudgetForm from "../../../components/forms/EstimatedBudgetForm";
+import EstimatedBudgetForm from "../forms/EstimatedBudgetForm";
 
 export default function EditEstimatedBudgetPage() {
   const estimatedBudget = {

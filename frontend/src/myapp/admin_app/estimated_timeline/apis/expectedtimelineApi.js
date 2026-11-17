@@ -1,4 +1,4 @@
-import axiosInstance from "./axios";
+import axiosInstance from "../../../../api_url/axios";
 
 const EXPECTED_TIMELINE_URL = "/admin/expected-timelines";
 

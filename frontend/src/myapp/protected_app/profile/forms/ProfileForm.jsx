@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import Form from "../../../components/uis/Form";
-import Input from "../../../components/uis/Input";
-import Button from "../../../components/uis/Button";
+import Form from "../../../../components/uis/Form";
+import Input from "../../../../components/uis/Input";
+import Button from "../../../../components/uis/Button";
 
 export default function ProfileForm({
   profile,

@@ -1,1 +1,1 @@
-import {default as JoinUsPage } from "./JoinUsPage"
+export {default as JoinUsPage} from "./JoinUsPage"

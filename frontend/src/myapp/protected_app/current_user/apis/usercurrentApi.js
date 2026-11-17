@@ -1,4 +1,4 @@
-import api from "./axios";
+import api from "../../../../api_url/axios";
 
 // ==========================================
 // GET CURRENT USER
