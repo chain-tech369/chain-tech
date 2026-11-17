@@ -6,7 +6,7 @@ import {
   getServiceRequest,
   updateServiceRequest,
   deleteServiceRequest,
-} from "../api_url/servicerequestApi";
+} from "../apis/servicerequestApi";
 
 // ==========================================
 // CREATE

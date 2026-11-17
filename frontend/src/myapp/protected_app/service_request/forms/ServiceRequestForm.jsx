@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import Form from "../uis/Form";
-import Input from "../uis/Input";
-import Button from "../uis/Button";
+import Form from "../../../../components/uis/Form";
+import Input from "../../../../components/uis/Input";
+import Button from "../../../../components/uis/Button";
 
 import {
   createServiceRequestAction,
-} from "../../actions/servicerequestAction";
+} from "../actions/servicerequestAction";
 
 export default function ServiceRequestForm() {
   // =====================================================

@@ -1,4 +1,4 @@
-import api from "../../../apis/axios";
+import api from "../../../../api_url/axios";
 
 // ==========================================
 // GET CURRENT LOGGED-IN USER

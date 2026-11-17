@@ -12,7 +12,7 @@ import UserAccountForm from "../forms/UserAccountForm";
 
 import {
   editUser,
-} from "../../../../actions/CurrentUserActions";
+} from "../../current_user/actions/CurrentUserActions";
 
 import UserAvatar from "../../../../components/uis/UserAvatar";
 

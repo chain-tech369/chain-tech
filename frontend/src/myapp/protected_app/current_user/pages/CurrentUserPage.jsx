@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchCurrentUser } from "../../actions/CurrentUserActions";
+import { fetchCurrentUser } from "../actions/CurrentUserActions";
 
 export default function CurrentUserPage() {
   const dispatch = useDispatch();

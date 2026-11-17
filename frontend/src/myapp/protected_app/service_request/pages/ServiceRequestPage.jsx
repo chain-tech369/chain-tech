@@ -1,4 +1,4 @@
-import ServiceRequestForm from "../../components/forms/ServiceRequestForm";
+import ServiceRequestForm from "../forms/ServiceRequestForm";
 
 export default function ServiceRequestPage() {
   return (
