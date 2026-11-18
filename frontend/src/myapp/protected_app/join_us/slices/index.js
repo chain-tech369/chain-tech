@@ -1,1 +1,1 @@
-export {default as joinusSlice} from "./joinusSlice"
+export {default as joinUsReducer} from "./joinusSlice"

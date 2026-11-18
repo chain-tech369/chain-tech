@@ -1,1 +1,1 @@
-export {default as skillSlice} from "./skillsSlice"
+export {default as skillsReducer} from "./skillsSlice"

@@ -31,7 +31,7 @@ export default function ProtectedNavbar({ currentUser }) {
     },
     {
       name: "Our services",
-      path: "/protected-services",
+      path: "/protected-service",
     },
     {
       name: "Service request",

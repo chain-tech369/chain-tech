@@ -1,1 +1,1 @@
-export {default as servicerequestSlice} from "./servicerequestSlice"
+export {default as serviceRequestReducer} from "./servicerequestSlice"

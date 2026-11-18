@@ -1,1 +1,1 @@
-export {default as profileSlice} from "./profileSlice"
+export {default as profileReducer} from "./profileSlice"

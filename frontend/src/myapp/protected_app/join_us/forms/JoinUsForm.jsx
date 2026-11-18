@@ -51,7 +51,7 @@ export default function JoinUsForm() {
     error,
     success,
   } = useSelector(
-    (state) => state.joinus
+    (state) => state.joinUs
   );
 
 

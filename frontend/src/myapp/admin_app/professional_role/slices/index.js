@@ -1,1 +1,1 @@
-export {default as PermissionRoleSlice} from "./professionalroleSlice"
+export {default as professionalRoleReducer} from "./professionalroleSlice"
